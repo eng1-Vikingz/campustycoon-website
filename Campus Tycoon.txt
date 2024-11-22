@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+  <!-- Tab Title and Icon -->
+  <title>Campus Tycoon ®™© - Official Site</title>
+  <link rel="icon" type="image/png" href="https://github.com/CampusTycoon/CampusTycoon.github.io/blob/main/Logo_No_Text-Circle.png?raw=true">
+  <!-- CSS Styling -->
+  <style>
+      html, body {
+            background-color: rgb(252, 212, 159);
+            min-height: 100%;
+      }
+    
+      .content {
+            text-align: center;
+            padding-bottom: 100px;
+      }
+
+    .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: lightgray;
+            text-align: center;
+            padding: 10px;
+        }
+    
+    .button {
+            color: black;
+            background-color: lightblue;
+            font-size: 18px;
+            text-decoration: none;
+            border-radius: 25px;
+            padding: 10px 18px;
+            margin: 30px;
+        }
+
+    .button:hover {
+            color: white;
+            background-color: blue;
+    }
+
+    .grid-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            justify-content: center;                 
+            gap: 10px;                              
+        }
+
+    .grid-container button {
+            margin: 5px 0; 
+            padding: 10px;
+            background-color: rgb(252, 212, 159);
+            border: rgb(252, 212, 159);
+        } 
+    </style>
+</head>
+
+<body class = "content">
+  <!-- Top Content -->
+  <h1>Campus Tycoon</h1>
+  <p>Welcome to the official site of the critically acclaimed 21st century hit Campus Tycoon!</p>
+  <center>Please see the helpful links below for our open-source resources.</center>
+  <br>
+
+  <img src="https://github.com/CampusTycoon/CampusTycoon.github.io/blob/main/Logo_No_Text-Circle.png?raw=true" alt="Campus Tycoon Logo" width="88" height="88">
+ 
+  <br>
+  <br>
+  <!-- Table of Buttons -->
+  <div class="grid-container">
+  <button></button>
+  <button><a class = "button" href="https://www.york.ac.uk/"> Something Important </a></button>
+  <button></button>
+    
+  <button><a class = "button" href="https://drive.google.com/drive/u/0/folders/1L6UOYRRj4aPvws7LvPctX814vb00CaBg"> Google Drive </a></button>
+  <button><a class = "button" href="http://www.plantuml.com/plantuml/png/ZLB1ZjGm3BtlL_W88_Y7XLqDckiEWhFRE1r3anJRtQf_Jn9QKaO2SQhxulVoxBn7DHHREdqumHE6QLQuSfX7j2Jm2GCzd4xmGZzc5WeKJJDeDnAEGpuvmIMoCOx0qKXUcPQAdbdKO4pBUy-EHhOL9acMR9seDbofJz71vSZQbC7FKhySVPA0nYc-WpHnp8K2PfedSXtsty5B2j3FQYcGL8sNB2mExCOA3WrhVo-4He0Wnq5SwkTIbGcVINc8kTfB-4gTiXMt3JjBYbOOH_1ZDaBH7RdRtXhmZ8OTAi5rLQFmD_xzHGM4IvZ6whXk8YC729Rcye2wxRexUCYse3lOBUiV1Drlj6phdsnVZDtHhS4b1WdebMIr6yS1QAmwy9dKyd_L_qB2dlisJar1n16iTUslK_zPTIQjlK_RO_zFxmVdX5Gt2DwSzs3ziL5Wl-V2lVsLzf7sySzSV9K8bvaW-PBZRzHREstHXuNjTeXZqzg8Rix4HufkwVGd"> Work Breakdown Diagram </a></button>
+  <button><a class = "button" href="http://www.plantuml.com/plantuml/png/XPBFJeGm48VlynIzUI8fu1-vRU9cpIOUZ1uR3msCKBDEiHtSxDjR21vA1MzavkDZVZFiF6l7hIPcU7Rs0siMKycBGXRNcQooeWHGB_Wr68UVIA7pgBb3PwXzMxAbN4UHcXdCvGGUoR3H9t4aHlTjy1ph0YNl_gGYawn07OppB9xiEJkO1a-6BoA4OSkN7bFfloz4_k86r1hOwRv7yaAps5PU-L4At249zOgrfMOZTd4B2RISwZw46DoutC2ys-WcYMqDJPqF3ZMZY6wujtKYtMHZQpN7NdB3-1JjSDKuhm_K7hrfAPccp7zRqSVpq0FOXShqW_y0"> Gantt Chart </a></button>
+  
+  <button><a class = "button" href="https://www.canva.com/design/DAGT68RuctE/W7SjgHjcQXmKrZy0KiUxAg/edit?utm_content=DAGT68RuctE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"> Canva Whiteboard </a></button>
+  <button><a class = "button" href="https://mrdoob.com/projects/chromeexperiments/google-space/"> Campus Tycoon JAR </a></button>
+  <button><a class = "button" href="https://www.york.ac.uk/"> GitHub Repo </a></button>
+    
+  <button><a class = "button" href="https://www.york.ac.uk/"> Website HTML </a></button>
+  <button><a class = "button" href="https://www.york.ac.uk/"> Requirements </a></button>
+  <button><a class = "button" href="https://www.york.ac.uk/"> Architecture </a></button>
+
+  <button><a class = "button" href="https://www.york.ac.uk/"> Method Selection and Planning </a></button>
+  <button><a class = "button" href="https://www.york.ac.uk/"> Risk Assessment and Mitigation </a></button>
+  <button><a class = "button" href="https://www.york.ac.uk/"> Implementation </a></button>
+
+  <button></button>
+  <button><a class = "button" href="https://www.york.ac.uk/"> TESTING </a></button>
+  <button></button>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>University of York, 2024. All Rights Reserved.</p>
+  </div>
+</body>
+  
+</html>
