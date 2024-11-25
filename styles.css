@@ -50,16 +50,22 @@ body {
     background-color: blue;
 }
 
-.grid-container {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    justify-content: left;                 
-    gap: 10px;                              
+.flex-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    
 }
 
-.grid-container button {
-    margin: 5px 0; 
-    padding: 10px;
-    background-color: rgb(252, 212, 159);
-    border: rgb(252, 212, 159);
+.flex-container > div {
+    background-color: #f1f1f1;
+    margin: 10px;
+    padding: 20px;
+    font-size: 30px;
+  }
+
+@media (max-width: 800px) {
+    .flex-container {
+    flex-direction: column;
+    }
 }
