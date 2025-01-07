@@ -12,7 +12,9 @@ a {
     
 }
 
-
+#backBtn{
+    outline: solid 1px black;
+}
 
 .header {
     background-color: black;
@@ -44,7 +46,7 @@ footer {
     margin-left: 220px;
     text-align: center;
 
-    padding: 20px;
+    padding: 25px;
     width: calc(100% - 220px);
 }
 .image-section {
@@ -55,7 +57,9 @@ img {
     max-width: 100%;
     height: auto;
     display: block;
-    margin: 0 auto;
+    margin:  auto;
+    background-color: white;
+    padding: 1em;
 }
 
 
