@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Timer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon.Game.GameLogic</a> &gt; <span class="el_source">Timer.java</span></div><h1>Timer.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon.Game.GameLogic;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.vikingz.campustycoon.UI.Components.LeaderboardNewEntryMenu;
+import com.vikingz.campustycoon.UI.Components.MenuText;
+import com.vikingz.campustycoon.Util.Drawer;
+import com.vikingz.campustycoon.Util.ScreenUtils;
+
+
+/**
+ * This class is used to create a timer.
+ */
+public class Timer{
+	public static MenuText text;
+    private static float timeRemaining;
+    private boolean isRunning;
+    private boolean hasEnded;
+<span class="nc" id="L19">    Skin skin = new Skin(Gdx.files.internal(&quot;glassy-ui/skin/glassy-ui.json&quot;));</span>
+    LeaderboardNewEntryMenu menu;
+
+
+    /**
+     * Constructor for Timer. 
+     * @param startTime The time to start the timer at.
+     */
+<span class="fc" id="L27">    public Timer(float startTime) {</span>
+<span class="nc" id="L28">        Timer.timeRemaining = startTime;</span>
+<span class="nc" id="L29">        this.isRunning = false;</span>
+<span class="nc" id="L30">        this.hasEnded = false;</span>
+<span class="nc" id="L31">    }</span>
+    
+    /**
+     * Starts the timer.
+     */
+    public void start() {
+<span class="nc" id="L37">        isRunning = true;</span>
+<span class="nc" id="L38">        hasEnded = false; // Reset if the timer is restarted</span>
+<span class="nc" id="L39">        menu = new LeaderboardNewEntryMenu(skin, this);</span>
+
+<span class="nc" id="L41">    }</span>
+    
+    /**
+     * Pauses the timer.
+     */
+    public void pause() {
+<span class="nc" id="L47">        isRunning = false;</span>
+<span class="nc" id="L48">    }</span>
+    
+    /**
+     * Resets the timer.
+     * @param startTime The time to reset the timer to.
+     */
+    public void reset(float startTime) {
+<span class="nc" id="L55">        Timer.timeRemaining = startTime;</span>
+<span class="nc" id="L56">        this.isRunning = false;</span>
+<span class="nc" id="L57">        this.hasEnded = false;</span>
+<span class="nc" id="L58">    }</span>
+    
+    /**
+     *  Updates the timer.
+     * @param deltaTime The time since the last update.
+     */
+    public void update(float deltaTime) {
+<span class="nc bnc" id="L65" title="All 4 branches missed.">        if (isRunning &amp;&amp; timeRemaining &gt; 0) {</span>
+<span class="nc" id="L66">            timeRemaining -= deltaTime;</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">            if (timeRemaining &lt;= 0) {</span>
+<span class="nc" id="L68">                timeRemaining = 0;</span>
+<span class="nc" id="L69">                onTimeUp(); // Call onTimeUp to handle end logic</span>
+            }
+			
+<span class="nc bnc" id="L72" title="All 2 branches missed.">			if (text != null) {</span>
+<span class="nc" id="L73">				text.text = floatToMinSec(timeRemaining);</span>
+<span class="nc" id="L74">				text.update();</span>
+			}
+        }
+<span class="nc" id="L77">    }</span>
+
+    /**
+     * Converts a float to a string in the format of minutes and seconds.
+     * @param secs The time in seconds.
+     * @return The time in the format of minutes and seconds.
+     */
+    public static String floatToMinSec(float secs){
+        
+<span class="nc" id="L86">        int s = Math.round(secs % 60);</span>
+<span class="nc" id="L87">        secs -= s;</span>
+<span class="nc" id="L88">        int m = Math.round(secs / 60);</span>
+
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if(m &gt; 100000){</span>
+<span class="nc" id="L91">            return null;</span>
+        }
+
+<span class="nc" id="L94">        return &quot;Time: &quot; + String.format(&quot;%02d&quot;, m) + &quot;:&quot; + String.format(&quot;%02d&quot;, s);</span>
+        
+    
+    }
+    
+    /**
+     * Gets the time remaining.
+     * @return The time remaining.
+     */
+    public static float getTimeRemaining() {
+<span class="nc" id="L104">        return timeRemaining;</span>
+    }
+
+    /**
+     * Checks if the timer has ended.
+     * @return If the timer has ended.
+     */
+    public boolean hasEnded() {
+<span class="nc" id="L112">        return hasEnded;</span>
+    }
+
+    /**
+     * Initialises end timer logic.
+     */
+    private void onTimeUp() {
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (!hasEnded) { // Check if already ended to avoid repeating</span>
+<span class="nc" id="L120">            hasEnded = true;</span>
+<span class="nc" id="L121">            isRunning = false; // Stop the timer completely</span>
+
+<span class="nc" id="L123">            Drawer.clear();</span>
+
+
+<span class="nc" id="L126">            Drawer.stage.addActor(menu);</span>
+<span class="nc" id="L127">            menu.toFront();</span>
+<span class="nc" id="L128">            menu.setPosition((Drawer.stage.getWidth() - menu.getWidth()) / 2, ((Drawer.stage.getHeight() - menu.getHeight()) / 2)-50);</span>
+<span class="nc" id="L129">            Gdx.input.setInputProcessor(Drawer.stage);</span>
+
+        }
+<span class="nc" id="L132">    }</span>
+
+    /**
+     * Checks if the timer is running.
+     * @return If the timer is running.
+     */
+    public boolean isRunning() {
+<span class="nc" id="L139">        return isRunning;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

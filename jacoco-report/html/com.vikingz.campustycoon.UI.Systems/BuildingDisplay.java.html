@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BuildingDisplay.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon.UI.Systems</a> &gt; <span class="el_source">BuildingDisplay.java</span></div><h1>BuildingDisplay.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon.UI.Systems;
+
+import java.util.List;
+
+import com.vikingz.campustycoon.Game.Buildings.Building;
+import com.vikingz.campustycoon.Util.Drawer;
+
+/**
+ * This class is used to display buildings.
+ */
+public class BuildingDisplay {
+	
+	public static final int Layer = -1;
+	public List&lt;Building&gt; buildings;
+	
+	/**
+	 * Constructor for the BuildingDisplay class.
+	 * @param Buildings List of buildings in the game.
+	 */
+<span class="fc" id="L20">	public BuildingDisplay(List&lt;Building&gt; Buildings) {</span>
+<span class="fc" id="L21">		buildings = Buildings;</span>
+<span class="fc" id="L22">	}</span>
+	
+	/**
+	 * Draw all the buildings to the screen.
+	 */
+	public void drawBuildings() {
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">		for (Building building : buildings) {</span>
+<span class="nc" id="L29">			Drawer.add(Layer, building.drawInfo);</span>
+<span class="nc" id="L30">		}</span>
+<span class="fc" id="L31">	}</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

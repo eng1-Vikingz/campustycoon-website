@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Sprite.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon.UI.Components</a> &gt; <span class="el_source">Sprite.java</span></div><h1>Sprite.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon.UI.Components;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * This class is used to create a sprite.
+ */
+public class Sprite {
+	// Contains the locations of where all Component images are stored
+	// Uses getters/setters to obsfuscate single images vs animations, and 
+	
+<span class="pc" id="L16">	private Map&lt;String, AnimationInfo&gt; animationType = new HashMap&lt;String, AnimationInfo&gt;();</span>
+<span class="pc" id="L17">	private String selected = &quot;DEFAULT&quot;; // Which method is currently active</span>
+<span class="pc" id="L18">	public boolean usesSpriteSheet = false;</span>
+<span class="pc" id="L19">	public SpriteSheet spriteSheet = null;</span>
+	
+	/**
+	 * Constructor for the Sprite class.
+	 * @param ImagePath
+	 */
+<span class="fc" id="L25">	public Sprite(String ImagePath) {</span>
+<span class="fc" id="L26">		Initialise();</span>
+<span class="fc" id="L27">		setDefaultImage(ImagePath);</span>
+<span class="fc" id="L28">	}</span>
+
+	/**
+	 * Constructor for the Sprite class.
+	 * @param ImagePaths
+	 */
+<span class="fc" id="L34">	public Sprite(List&lt;String&gt; ImagePaths) {</span>
+<span class="fc" id="L35">		Initialise();</span>
+<span class="fc" id="L36">		setDefaultAnimation(ImagePaths);</span>
+<span class="fc" id="L37">	}</span>
+	
+	/**
+	 * Constructor for the Sprite class.
+	 * @param SpriteSheet
+	 * @param SpriteID
+	 */
+<span class="fc" id="L44">	public Sprite(SpriteSheet SpriteSheet, int SpriteID) {</span>
+<span class="fc" id="L45">		spriteSheet = SpriteSheet;</span>
+<span class="fc" id="L46">		usesSpriteSheet = true;</span>
+<span class="fc" id="L47">		Initialise();</span>
+<span class="fc" id="L48">		setDefaultImage(SpriteID);</span>
+<span class="fc" id="L49">	}</span>
+
+	/**
+	 * Constructor for the Sprite class.
+	 * @param SpriteSheet
+	 * @param SpriteIDs
+	 */
+<span class="nc" id="L56">	public Sprite(SpriteSheet SpriteSheet, ArrayList&lt;Integer&gt; SpriteIDs) {</span>
+<span class="nc" id="L57">		spriteSheet = SpriteSheet;</span>
+<span class="nc" id="L58">		usesSpriteSheet = true;</span>
+<span class="nc" id="L59">		Initialise();</span>
+<span class="nc" id="L60">		setDefaultAnimation(SpriteIDs);</span>
+<span class="nc" id="L61">	}</span>
+	
+	/**
+	 * Initialises the sprite class
+	 */
+	private void Initialise() {
+<span class="fc" id="L67">		animationType.put(&quot;DEFAULT&quot;, new AnimationInfo()); // Default image</span>
+<span class="fc" id="L68">		animationType.put(&quot;HOVER&quot;, new AnimationInfo()); // To be shown on mouse hover</span>
+<span class="fc" id="L69">		animationType.put(&quot;CLICK&quot;, new AnimationInfo()); // To be shown on click</span>
+<span class="fc" id="L70">		animationType.put(&quot;CALL&quot;, new AnimationInfo()); // To be shown when criteria defined in the Component is met</span>
+<span class="fc" id="L71">	}</span>
+	
+	// I have 0 clue how to reasonably implement keyframe interpolation or any other fancy technique
+	// So all an animation is here is just a list of images to cycle through (1 step per frame)
+	private class AnimationInfo {
+		private List&lt;String&gt; imagePaths;
+		private List&lt;Integer&gt; spriteIDs;
+		private int imageStep; // Counter for animation frame, will always be 0 for single images
+		// Possibly add Time variable, in order to adjust how fast the animation plays
+		
+<span class="fc" id="L81">		public AnimationInfo() {</span>
+<span class="fc" id="L82">			imagePaths = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L83">			imageStep = 0;</span>
+<span class="fc" id="L84">		}</span>
+<span class="fc" id="L85">		public AnimationInfo(String ImagePath) {</span>
+<span class="fc" id="L86">			imagePaths = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L87">			imagePaths.add(ImagePath);</span>
+<span class="fc" id="L88">			imageStep = 0;</span>
+<span class="fc" id="L89">		}</span>
+<span class="fc" id="L90">		public AnimationInfo(List&lt;String&gt; ImagePaths) {</span>
+<span class="fc" id="L91">			imagePaths = ImagePaths;</span>
+<span class="fc" id="L92">			imageStep = 0;</span>
+<span class="fc" id="L93">		}</span>
+		
+<span class="fc" id="L95">		public AnimationInfo(int SpriteID) {</span>
+<span class="fc" id="L96">			spriteIDs = new ArrayList&lt;Integer&gt;();</span>
+<span class="fc" id="L97">			spriteIDs.add(SpriteID);</span>
+<span class="fc" id="L98">			imageStep = 0;</span>
+<span class="fc" id="L99">		}</span>
+<span class="nc" id="L100">		public AnimationInfo(ArrayList&lt;Integer&gt; SpriteIDs) {</span>
+			// SpriteIDs is of type ArrayList rather than List because otherwise java seems to think that List&lt;String&gt; and List&lt;Integer&gt; is the same thing and throws an error
+<span class="nc" id="L102">			spriteIDs = SpriteIDs;</span>
+<span class="nc" id="L103">			imageStep = 0;</span>
+<span class="nc" id="L104">		}</span>
+	}
+	
+	
+	private boolean checkSelectionValid(String selection) {
+<span class="nc" id="L109">		return animationType.keySet().contains(selection);</span>
+	}
+	
+	private String getInvalidSelectionMessage() {
+<span class="nc" id="L113">		Iterator&lt;String&gt; keyIterator = animationType.keySet().iterator();</span>
+<span class="nc" id="L114">		String errorMessage = &quot;Invalid Selection.\nSelection must be one of; &quot;;</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">		for (int i = 0; i &lt; animationType.keySet().size() - 1; i++) {</span>
+<span class="nc" id="L116">			errorMessage += &quot;\&quot;&quot; + keyIterator.next() + &quot;\&quot;, &quot;;</span>
+		}
+<span class="nc" id="L118">		errorMessage += &quot;or \&quot;&quot; + keyIterator.next() + &quot;\&quot;.&quot;;</span>
+<span class="nc" id="L119">		return errorMessage;</span>
+	}
+	
+	public void changeSelection(String selection) throws Exception {
+<span class="nc bnc" id="L123" title="All 2 branches missed.">		if (!checkSelectionValid(selection)) {</span>
+<span class="nc" id="L124">			throw new Exception(getInvalidSelectionMessage());</span>
+		}
+		
+<span class="nc" id="L127">		selected = selection;</span>
+<span class="nc" id="L128">	}</span>
+	
+	public void setImagePath(String ImagePath) {
+<span class="nc" id="L131">		this.animationType.put(selected, new AnimationInfo(ImagePath));</span>
+<span class="nc" id="L132">	}</span>
+	
+	public String getImagePath() {
+<span class="nc" id="L135">		return selectImage();</span>
+	}
+	
+	public void updateImagePath(String ImagePath) {
+<span class="nc" id="L139">		AnimationInfo animInfo = this.animationType.get(selected);</span>
+<span class="nc" id="L140">		animInfo = new AnimationInfo(ImagePath);</span>
+<span class="nc" id="L141">		animationType.put(selected, animInfo);</span>
+<span class="nc" id="L142">	}</span>
+	
+	private String selectImage() {
+<span class="nc" id="L145">		AnimationInfo animInfo = animationType.get(selected);</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">		if (!usesSpriteSheet) {</span>
+<span class="nc" id="L147">			return animInfo.imagePaths.get(animInfo.imageStep);</span>
+		}
+<span class="nc" id="L149">		return spriteSheet.imagePath;</span>
+	}
+	
+	public void stepAnimation() {
+<span class="nc" id="L153">		AnimationInfo animInfo = animationType.get(selected);</span>
+<span class="nc" id="L154">		int currentStep = animInfo.imageStep;</span>
+		
+<span class="nc bnc" id="L156" title="All 2 branches missed.">		if (!usesSpriteSheet) {</span>
+<span class="nc" id="L157">			animInfo.imageStep = (currentStep + 1) % animInfo.imagePaths.size();</span>
+<span class="nc" id="L158">			return;</span>
+		}
+<span class="nc" id="L160">		animInfo.imageStep = (currentStep + 1) % animInfo.spriteIDs.size();</span>
+<span class="nc" id="L161">	}</span>
+	
+	public Integer getID() {
+<span class="nc" id="L164">		AnimationInfo animInfo = animationType.get(selected);</span>
+<span class="nc" id="L165">		return animInfo.spriteIDs.get(animInfo.imageStep);</span>
+	}
+	
+	
+	public void setDefaultImage(String imagePath) {
+<span class="fc" id="L170">		animationType.replace(&quot;DEFAULT&quot;, new AnimationInfo(imagePath)); </span>
+<span class="fc" id="L171">	}</span>
+	public void setDefaultAnimation(List&lt;String&gt; imagePaths) {
+<span class="fc" id="L173">		animationType.replace(&quot;DEFAULT&quot;, new AnimationInfo(imagePaths));</span>
+<span class="fc" id="L174">	}</span>
+	public void setDefaultImage(Integer spriteID) {
+<span class="fc" id="L176">		animationType.replace(&quot;DEFAULT&quot;, new AnimationInfo(spriteID));</span>
+<span class="fc" id="L177">	}</span>
+	public void setDefaultAnimation(ArrayList&lt;Integer&gt; spriteIDs) {
+<span class="nc" id="L179">		animationType.replace(&quot;DEFAULT&quot;, new AnimationInfo(spriteIDs));</span>
+<span class="nc" id="L180">	}</span>
+	
+	public void setHoverImage(String imagePath) {
+<span class="nc" id="L183">		animationType.replace(&quot;HOVER&quot;, new AnimationInfo(imagePath));</span>
+<span class="nc" id="L184">	}</span>
+	public void setHoverAnimation(List&lt;String&gt; imagePaths) {
+<span class="nc" id="L186">		animationType.replace(&quot;HOVER&quot;, new AnimationInfo(imagePaths));</span>
+<span class="nc" id="L187">	}</span>
+	public void setHoverImage(Integer spriteID) {
+<span class="nc" id="L189">		animationType.replace(&quot;HOVER&quot;, new AnimationInfo(spriteID));</span>
+<span class="nc" id="L190">	}</span>
+	public void setHoverAnimation(ArrayList&lt;Integer&gt; spriteIDs) {
+<span class="nc" id="L192">		animationType.replace(&quot;HOVER&quot;, new AnimationInfo(spriteIDs));</span>
+<span class="nc" id="L193">	}</span>
+	
+	public void setClickImage(String imagePath) {
+<span class="nc" id="L196">		animationType.replace(&quot;CLICK&quot;, new AnimationInfo(imagePath));</span>
+<span class="nc" id="L197">	}</span>
+	public void setClickAnimation(List&lt;String&gt; imagePaths) {
+<span class="nc" id="L199">		animationType.replace(&quot;CLICK&quot;, new AnimationInfo(imagePaths));</span>
+<span class="nc" id="L200">	}</span>
+	public void setClickImage(Integer spriteID) {
+<span class="nc" id="L202">		animationType.replace(&quot;CLICK&quot;, new AnimationInfo(spriteID));</span>
+<span class="nc" id="L203">	}</span>
+	public void setClickAnimation(ArrayList&lt;Integer&gt; spriteIDs) {
+<span class="nc" id="L205">		animationType.replace(&quot;CLICK&quot;, new AnimationInfo(spriteIDs));</span>
+<span class="nc" id="L206">	}</span>
+	
+	public void setCallImage(String imagePath) {
+<span class="nc" id="L209">		animationType.replace(&quot;CALL&quot;, new AnimationInfo(imagePath));</span>
+<span class="nc" id="L210">	}</span>
+	public void setCallAnimation(List&lt;String&gt; imagePaths) {
+<span class="nc" id="L212">		animationType.replace(&quot;CALL&quot;, new AnimationInfo(imagePaths));</span>
+<span class="nc" id="L213">	}</span>
+	public void setCallImage(Integer spriteID) {
+<span class="nc" id="L215">		animationType.replace(&quot;CALL&quot;, new AnimationInfo(spriteID));</span>
+<span class="nc" id="L216">	}</span>
+	public void setCallAnimation(ArrayList&lt;Integer&gt; spriteIDs) {
+<span class="nc" id="L218">		animationType.replace(&quot;CALL&quot;, new AnimationInfo(spriteIDs));</span>
+<span class="nc" id="L219">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

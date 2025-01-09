@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapTile.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon.UI.Components</a> &gt; <span class="el_source">MapTile.java</span></div><h1>MapTile.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon.UI.Components;
+
+/**
+ * This class is used to create a map tile.
+ */
+public class MapTile extends Component {
+
+	private int mapHeight;
+	public int gridX, gridY;
+	
+	/**
+	 * Constructor for the MapTile class.
+	 * @param SpriteSheet
+	 * @param TileID
+	 * @param X
+	 * @param Y
+	 * @param Width
+	 * @param Height
+	 */
+	public MapTile(SpriteSheet SpriteSheet, int TileID, float X, float Y, float Width, float Height) {
+<span class="nc" id="L21">		super(SpriteSheet, TileID, X, Y, Width, Height);</span>
+<span class="nc" id="L22">	}</span>
+
+	/**
+	 * Constructor for the MapTile class.
+	 * @param SpriteSheet
+	 * @param TileID
+	 * @param X
+	 * @param Y
+	 */
+	public MapTile(SpriteSheet SpriteSheet, int TileID, float X, float Y) {
+<span class="fc" id="L32">		super(SpriteSheet, TileID, X, Y, SpriteSheet.spriteWidth, SpriteSheet.spriteHeight);</span>
+<span class="fc" id="L33">	}</span>
+
+	/**
+	 * Constructor for the MapTile class.
+	 * @param SpriteSheet
+	 * @param TileID
+	 * @param X
+	 * @param Y
+	 * @param GridX
+	 * @param GridY
+	 * @param MapHeight
+	 */
+	public MapTile(SpriteSheet SpriteSheet, int TileID, float X, float Y, int GridX, int GridY, int MapHeight) {
+<span class="nc" id="L46">		super(SpriteSheet, TileID, X, Y, SpriteSheet.spriteWidth, SpriteSheet.spriteHeight);</span>
+<span class="nc" id="L47">		mapHeight = MapHeight;</span>
+<span class="nc" id="L48">		gridX = GridX;</span>
+<span class="nc" id="L49">		gridY = GridY;</span>
+<span class="nc" id="L50">	}</span>
+
+	/**
+	 * Constructor for the MapTile class.
+	 * Creates a defualt tile with values set to 0.
+	 */
+	public MapTile() {
+<span class="fc" id="L57">		super(0, 0, 0, 0);</span>
+<span class="fc" id="L58">	}</span>
+	
+
+	/**
+	 * Applies zoom
+	 */
+	public void applyZoomOffset() {
+<span class="fc" id="L65">		this.baseX = this.offsetX + getBaseWidth() * this.gridX;</span>
+<span class="fc" id="L66">		this.baseY = this.offsetY + getBaseHeight() * (mapHeight - 1 - this.gridY);</span>
+<span class="fc" id="L67">		update();</span>
+<span class="fc" id="L68">	}</span>
+	
+	@Override
+	public void setClickAction(String action) {
+<span class="nc" id="L72">		throw new UnsupportedOperationException(&quot;Unimplemented method 'setClickAction'&quot;);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

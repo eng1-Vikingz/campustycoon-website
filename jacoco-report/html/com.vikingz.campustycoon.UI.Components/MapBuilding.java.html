@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapBuilding.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon.UI.Components</a> &gt; <span class="el_source">MapBuilding.java</span></div><h1>MapBuilding.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon.UI.Components;
+
+import java.util.List;
+
+import com.vikingz.campustycoon.Game.Tiles.Tile;
+
+/**
+ * This class is used to create a building on the map.
+ */
+public class MapBuilding extends Component {
+	float gridBaseWidth, gridBaseHeight;
+	float gridX, gridY;
+	
+	/**
+	 * Constructor for the MapBuilding class.
+	 * @param imagePath 
+	 * @param X 
+	 * @param Y
+	 * @param Width
+	 * @param Height
+	 */
+	public MapBuilding(String imagePath, float X, float Y, float Width, float Height) {
+<span class="fc" id="L23">		super(imagePath, getX(X), getY(Y), Width * Tile.SpriteSize, Height * Tile.SpriteSize);</span>
+<span class="fc" id="L24">		initialiseBuilding(X, Y, Width, Height);</span>
+<span class="fc" id="L25">	}</span>
+
+	/**
+	 * Constructor for the MapBuilding class.
+	 * @param imagePaths
+	 * @param X
+	 * @param Y
+	 * @param Width
+	 * @param Height
+	 */
+	public MapBuilding(List&lt;String&gt; imagePaths, float X, float Y, float Width, float Height) {
+<span class="nc" id="L36">		super(imagePaths, getX(X), getY(Y), Width * Tile.SpriteSize, Height * Tile.SpriteSize);</span>
+<span class="nc" id="L37">		initialiseBuilding(X, Y, Width, Height);</span>
+<span class="nc" id="L38">	}</span>
+
+	/**
+	 * Constructor for the MapBuilding class. 
+	 * @param imagePath
+	 * @param X
+	 * @param Y
+	 */
+	public MapBuilding(String imagePath, float X, float Y) {
+<span class="fc" id="L47">		super(imagePath, getX(X), getY(Y), Tile.SpriteSize, Tile.SpriteSize);</span>
+<span class="fc" id="L48">		initialiseBuilding(X, Y, 1, 1);</span>
+<span class="fc" id="L49">	}</span>
+
+	/**
+	 * Constructor for the MapBuilding class.
+	 */
+	public MapBuilding() {
+<span class="nc" id="L55">		super(0, 0, 0, 0);</span>
+<span class="nc" id="L56">	}</span>
+	
+	/**
+	 * Initialises the building.
+	 * @param X
+	 * @param Y
+	 * @param Width
+	 * @param Height
+	 */
+	private void initialiseBuilding(float X, float Y, float Width, float Height) {
+<span class="fc" id="L66">		gridX = X;</span>
+<span class="fc" id="L67">		gridY = Y;</span>
+<span class="fc" id="L68">		gridBaseWidth = Width;</span>
+<span class="fc" id="L69">		gridBaseHeight = Height;</span>
+<span class="fc" id="L70">	}</span>
+	
+	private static float getX(float X) {
+<span class="fc" id="L73">		return X * Tile.SpriteSize;</span>
+	}
+	private static float getY(float Y) {
+<span class="fc" id="L76">		return Y * Tile.SpriteSize;</span>
+	}
+	
+
+	/**
+	 * Sets the grid coordinates of the building.
+	 * @param X
+	 * @param Y
+	 */
+	public void setGridCoordinates(int X, int Y) {
+<span class="fc" id="L86">		gridX = X;</span>
+<span class="fc" id="L87">		gridY = Y;</span>
+<span class="fc" id="L88">		initialise(getX(X), getY(Y), baseWidth, baseHeight, scale);</span>
+<span class="fc" id="L89">	}</span>
+	
+	/**
+	 * Applies zoom ofsset to the building.
+	 */
+	public void applyZoomOffset() {
+<span class="nc" id="L95">		this.baseX = this.offsetX + (getBaseWidth() * this.gridX) / this.gridBaseWidth;</span>
+<span class="nc" id="L96">		this.baseY = this.offsetY + (getBaseHeight() * this.gridY) / this.gridBaseHeight;</span>
+<span class="nc" id="L97">		update();</span>
+<span class="nc" id="L98">	}</span>
+	
+	@Override
+	public void setClickAction(String action) {
+<span class="nc" id="L102">		throw new UnsupportedOperationException(&quot;Unimplemented method 'setClickAction'&quot;);</span>
+	}
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

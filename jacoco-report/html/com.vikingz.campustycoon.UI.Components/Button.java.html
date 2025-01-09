@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Button.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon.UI.Components</a> &gt; <span class="el_source">Button.java</span></div><h1>Button.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon.UI.Components;
+
+import java.util.List;
+import java.util.function.Consumer;
+
+import com.vikingz.campustycoon.Game.GameLogic.Event;
+import com.vikingz.campustycoon.UI.Screens.GameplayScreen;
+import com.vikingz.campustycoon.Util.GameUtils;
+import com.vikingz.campustycoon.Util.MapUtils;
+import com.vikingz.campustycoon.Util.ScreenUtils;
+
+/**
+ * This class is used to create a button.
+ */
+public class Button extends Component {
+	public int value; // Used to carry information about which button was pressed (i.e. in events)
+
+	/**
+	 * Constructor for the Button class.
+	 * @param X
+	 * @param Y
+	 * @param Width
+	 * @param Height
+	 */
+	public Button(float X, float Y, float Width, float Height) {
+<span class="fc" id="L26">		super(X, Y, Width, Height);</span>
+<span class="fc" id="L27">	}</span>
+
+	/**
+	 * Constructor for the Button class.
+	 * @param imagePath
+	 * @param X
+	 * @param Y
+	 * @param Width
+	 * @param Height
+	 */
+	public Button(String imagePath, float X, float Y, float Width, float Height) {
+<span class="fc" id="L38">		super(imagePath, X, Y, Width, Height);</span>
+<span class="fc" id="L39">	}</span>
+
+	/**
+	 * Constructor for the Button class.
+	 * @param imagePaths
+	 * @param X
+	 * @param Y
+	 * @param Width
+	 * @param Height
+	 */
+	public Button(List&lt;String&gt; imagePaths, float X, float Y, float Width, float Height) {
+<span class="fc" id="L50">		super(imagePaths, X, Y, Width, Height);</span>
+<span class="fc" id="L51">	}</span>
+
+
+	/**
+	 * This method is used to open the start screen.
+	 * @param isAction 
+	 */
+	protected static void openStartScreen(Boolean isAction) {
+<span class="nc" id="L59">		ScreenUtils.OpenStartScreen();</span>
+<span class="nc" id="L60">		System.out.println(&quot;Screen changed to StartScreen&quot;);</span>
+<span class="nc" id="L61">	}</span>
+
+	/**
+	 * This method is used to open the gameplay screen.
+	 * @param isAction 
+	 */
+	protected static void openGameplayScreen(Boolean isAction) {
+<span class="nc" id="L68">		ScreenUtils.openGameplayScreen();</span>
+<span class="nc" id="L69">		System.out.println(&quot;Screen changed to GameplayScreen&quot;);</span>
+<span class="nc" id="L70">	}</span>
+
+	/**
+	 * This method is used to open the settings screen.
+	 * @param isAction
+	 */
+    protected static void openSettingsScreen(Boolean isAction){
+<span class="nc" id="L77">        ScreenUtils.openSettingsScreen();</span>
+<span class="nc" id="L78">        System.out.println(&quot;Screen changed to Settings screen&quot;);</span>
+<span class="nc" id="L79">    }</span>
+
+	/**
+	 * This method is used to open the leaderboard screen.
+	 * @param isAction
+	 */
+    protected static void openLeaderboardScreen(Boolean isAction){
+<span class="nc" id="L86">		ScreenUtils.openLeaderboardScreen();</span>
+<span class="nc" id="L87">		System.out.println(&quot;Screen changed to Leaderboard screen&quot;);</span>
+<span class="nc" id="L88">	}</span>
+
+	/**
+	 * Opens event popup
+	 * @param isAction
+	 */
+	protected static void openEventPopup(Boolean isAction) {
+<span class="nc" id="L95">		GameUtils.currentEvent = new Event();</span>
+<span class="nc" id="L96">		System.out.println(&quot;Event opened&quot;);</span>
+<span class="nc" id="L97">	}</span>
+
+	/**
+	 * Closes event popup
+	 * @param isAction
+	 */
+	protected static void closeEventPopup(Boolean isAction) {
+<span class="nc" id="L104">		GameUtils.currentEvent.eventUI.close();</span>
+<span class="nc" id="L105">		System.out.println(&quot;Event closed&quot;);</span>
+<span class="nc" id="L106">	}</span>
+
+	/**
+	 * Chooses an event option
+	 * @param isAction
+	 */
+	protected void chooseEventOption(Boolean isAction) {
+<span class="nc" id="L113">		GameUtils.currentEvent.chooseOption(value);</span>
+<span class="nc" id="L114">	}</span>
+
+
+	// Toggles which building is being placed.
+
+	public static void toggleAccommodationBuilding(Boolean isAction) {
+<span class="nc" id="L120">		GameUtils.map.toggleBuildingPlacement(MapUtils.Placement.AccommodationBuilding);</span>
+<span class="nc" id="L121">		printBuildingChange();</span>
+<span class="nc" id="L122">	}</span>
+	public static void toggleStudyBuilding(Boolean isAction) {
+<span class="nc" id="L124">		GameUtils.map.toggleBuildingPlacement(MapUtils.Placement.StudyBuilding);</span>
+<span class="nc" id="L125">		printBuildingChange();</span>
+<span class="nc" id="L126">	}</span>
+	public static void toggleCafeteriaBuilding(Boolean isAction) {
+<span class="nc" id="L128">		GameUtils.map.toggleBuildingPlacement(MapUtils.Placement.CafeteriaBuilding);</span>
+<span class="nc" id="L129">		printBuildingChange();</span>
+<span class="nc" id="L130">	}</span>
+	public static void toggleRelaxationBuilding(Boolean isAction) {
+<span class="nc" id="L132">		GameUtils.map.toggleBuildingPlacement(MapUtils.Placement.RelaxationBuilding);</span>
+<span class="nc" id="L133">		printBuildingChange();</span>
+<span class="nc" id="L134">	}</span>
+
+	public static void toggleRelaxation2Building(Boolean isAction) {
+<span class="nc" id="L137">		GameUtils.map.toggleBuildingPlacement(MapUtils.Placement.RelaxationBuilding2);</span>
+<span class="nc" id="L138">		printBuildingChange();</span>
+<span class="nc" id="L139">	}</span>
+
+	public static void printBuildingChange() {
+<span class="nc" id="L142">		System.out.println(</span>
+			&quot;Toggled building placement mode to: &quot; + GameUtils.map.placing +
+			&quot;\nToggled building placement type to: &quot; + GameUtils.map.placementType);
+<span class="nc" id="L145">	}</span>
+
+
+	@Override
+	/**
+	 * 	Based on the action, decides what happens.
+	 *  @param Actions The actions to be done.
+	 */
+	public void setClickAction(String Action) {
+<span class="pc" id="L154">		Consumer&lt;Boolean&gt; action = a -&gt; none(a);</span>
+<span class="pc bpc" id="L155" title="12 of 13 branches missed.">		switch (Action) {</span>
+			// Screen changes
+			case Actions.OpenStartScreen:
+<span class="nc" id="L158">				action = a -&gt; openStartScreen(a);</span>
+<span class="nc" id="L159">				break;</span>
+			case Actions.OpenGameplayScreen:
+<span class="nc" id="L161">				action = a -&gt; openGameplayScreen(a);</span>
+<span class="nc" id="L162">				break;</span>
+
+            case Actions.OpenLeaderboardScreen:
+<span class="nc" id="L165">                action = a -&gt; openLeaderboardScreen(a);</span>
+<span class="nc" id="L166">                break;</span>
+
+            case Actions.OpenSettingsScreen:
+<span class="nc" id="L169">                action = a -&gt; openSettingsScreen(a);</span>
+<span class="nc" id="L170">                break;</span>
+
+            // Events
+			case Actions.OpenEventPopup:
+<span class="nc" id="L174">				action = a -&gt; openEventPopup(a);</span>
+<span class="nc" id="L175">				break;</span>
+			case Actions.CloseEventPopup:
+<span class="nc" id="L177">				action = a -&gt; closeEventPopup(a);</span>
+<span class="nc" id="L178">				break;</span>
+
+			case Actions.ChooseEventOption:
+<span class="nc" id="L181">				action = a -&gt; chooseEventOption(a);</span>
+<span class="nc" id="L182">				break;</span>
+
+
+			// Building toggles
+			case Actions.ToggleAccommodationBuilding:
+<span class="nc" id="L187">				action = a -&gt; toggleAccommodationBuilding(a);</span>
+<span class="nc" id="L188">				break;</span>
+			case Actions.ToggleStudyBuilding:
+<span class="nc" id="L190">				action = a -&gt; toggleStudyBuilding(a);</span>
+<span class="nc" id="L191">				break;</span>
+			case Actions.ToggleCafeteriaBuilding:
+<span class="nc" id="L193">				action = a -&gt; toggleCafeteriaBuilding(a);</span>
+<span class="nc" id="L194">				break;</span>
+			case Actions.ToggleRelaxationBuilding:
+<span class="nc" id="L196">				action = a -&gt; toggleRelaxationBuilding(a);</span>
+<span class="nc" id="L197">				break;</span>
+
+			case Actions.ToggleRelaxation2Building:
+<span class="nc" id="L200">				action = a -&gt; toggleRelaxation2Building(a);</span>
+<span class="nc" id="L201">				System.out.println(&quot;Relax2&quot;);</span>
+
+			default:
+<span class="fc" id="L204">				System.out.println(&quot;Invalid action passed to button: &quot; + this.toString());</span>
+				break;
+		}
+<span class="fc" id="L207">		clickAction = action;</span>
+<span class="fc" id="L208">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

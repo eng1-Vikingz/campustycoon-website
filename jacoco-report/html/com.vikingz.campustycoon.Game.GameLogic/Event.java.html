@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Event.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon.Game.GameLogic</a> &gt; <span class="el_source">Event.java</span></div><h1>Event.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon.Game.GameLogic;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import com.vikingz.campustycoon.UI.Screens.GameplayScreen;
+import com.vikingz.campustycoon.UI.Systems.EventPopup;
+import com.vikingz.campustycoon.Util.GameSounds;
+import com.vikingz.campustycoon.Util.GameUtils;
+import com.vikingz.campustycoon.Util.ScreenUtils;
+
+/**
+ * This class is used to create and manage an events.
+ */
+public class Event {
+	public EventPopup eventUI;
+	public int choices; // Number of choices for the event
+	public String eventText; // Description of the event
+    public String event; // event
+	public List&lt;String&gt; choiceText; // Text to be displayed in the choice buttons (NOT IMPLEMENTED)
+
+    /**
+     * Constructor for Event.
+     */
+<span class="nc" id="L26">	public Event() {</span>
+<span class="nc" id="L27">		choices = 3;</span>
+<span class="nc" id="L28">		choiceText = new ArrayList&lt;String&gt;(Arrays.asList(</span>
+			&quot;Accept&quot;, &quot;Neutral&quot;, &quot;Reject&quot;));
+
+<span class="nc" id="L31">        event =  EventLoader.getEvent();</span>
+<span class="nc" id="L32">        eventText = EventLoader.getEventDescription(event);</span>
+
+<span class="nc" id="L34">		eventUI = new EventPopup(this);</span>
+<span class="nc" id="L35">		eventUI.initialise();</span>
+<span class="nc" id="L36">	}</span>
+
+    /**
+     * Chooses an option for the event.
+     * @param option
+     */
+	public void chooseOption(int option) {
+<span class="nc bnc" id="L43" title="All 2 branches missed.">		if (option &gt; choices) {</span>
+<span class="nc" id="L44">			System.out.print(&quot;Invalid event choice&quot;);</span>
+<span class="nc" id="L45">			return;</span>
+		}
+        // Switch statement to determine which option was chosen
+<span class="nc bnc" id="L48" title="All 4 branches missed.">		switch (option) {</span>
+			case 1:
+<span class="nc" id="L50">				acceptOption();</span>
+<span class="nc" id="L51">				break;</span>
+			case 2:
+<span class="nc" id="L53">				neutralOption();</span>
+<span class="nc" id="L54">				break;</span>
+			case 3:
+<span class="nc" id="L56">				rejectOption();</span>
+<span class="nc" id="L57">				break;</span>
+			default:
+<span class="nc" id="L59">				System.out.print(&quot;Invalid event choice&quot;);</span>
+				break;
+		}
+<span class="nc" id="L62">	}</span>
+
+    // TODO: Temporary choice implementations, will change to abstract functions later (as each individual event should decide what the outcome of choices are)
+    
+    /**
+     * Accepts the event.
+     */
+	public void acceptOption() {
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (allowChoice(&quot;accept&quot;)) {</span>
+<span class="nc" id="L71">            SatisfactionMeter.modifySatisfactionScore(EventLoader.getActionGain(&quot;accept&quot;, event));</span>
+<span class="nc" id="L72">            this.End();</span>
+        }
+        else{
+<span class="nc" id="L75">            ((GameplayScreen) ScreenUtils.gameplayScreen).displayBankruptWarning();</span>
+<span class="nc" id="L76">            GameSounds.playPlaceError();</span>
+        }
+<span class="nc" id="L78">    }</span>
+
+    /**
+     * Neutral option for the event.
+     */
+	public void neutralOption() {
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        if (allowChoice(&quot;neutral&quot;)) {</span>
+<span class="nc" id="L85">            SatisfactionMeter.modifySatisfactionScore(EventLoader.getActionGain(&quot;neutral&quot;, event));</span>
+<span class="nc" id="L86">            this.End();</span>
+        }
+        else{
+<span class="nc" id="L89">            ((GameplayScreen) ScreenUtils.gameplayScreen).displayBankruptWarning();</span>
+<span class="nc" id="L90">            GameSounds.playPlaceError();</span>
+        }
+<span class="nc" id="L92">    }</span>
+
+    /**
+     * Rejects the event.
+     */
+	public void rejectOption() {
+<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (allowChoice(&quot;reject&quot;)) {</span>
+<span class="nc" id="L99">            SatisfactionMeter.modifySatisfactionScore(EventLoader.getActionGain(&quot;reject&quot;, event));</span>
+<span class="nc" id="L100">            this.End();</span>
+        }
+        else{
+<span class="nc" id="L103">            ((GameplayScreen) ScreenUtils.gameplayScreen).displayBankruptWarning();</span>
+<span class="nc" id="L104">            GameSounds.playPlaceError();</span>
+        }
+<span class="nc" id="L106">    }</span>
+
+    /**
+     * Checks if the player has enough money to make a choice.
+     * @param choice The choice to be made.
+     * @return
+     */
+    private boolean allowChoice(String choice) {
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        if (MoneyHandler.addMoney(-EventLoader.getActionCost(choice, event))) {</span>
+<span class="nc" id="L115">            return true;</span>
+        } else {
+<span class="nc" id="L117">            System.out.println(&quot;no money&quot;);</span>
+<span class="nc" id="L118">            return false;</span>
+        }
+    }
+
+    /**
+     * Ends the event.
+     */
+    public void End() {
+<span class="nc" id="L126">		eventUI.close();</span>
+<span class="nc" id="L127">		GameUtils.currentEvent = null;</span>
+<span class="nc" id="L128">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

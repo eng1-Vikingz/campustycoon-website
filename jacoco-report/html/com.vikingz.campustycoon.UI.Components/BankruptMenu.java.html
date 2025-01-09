@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankruptMenu.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon.UI.Components</a> &gt; <span class="el_source">BankruptMenu.java</span></div><h1>BankruptMenu.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon.UI.Components;
+
+
+import com.vikingz.campustycoon.UI.Screens.GameplayScreen;
+import com.vikingz.campustycoon.Util.ScreenUtils;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+
+/**
+ *  This class represents a PauseMenu in the game.
+ *
+ * This is the menu that appears if the user pressed the esc button
+ * during the game.
+ *
+ * This menu contains a settings button which sends the user to the settings
+ * screen from which they can edit the settings.
+ *
+ * To close the pause menu, the user has to press the esc button again.
+ */
+public class BankruptMenu extends Window {
+    TextButton quitBtn;
+
+    /**
+     * Creates a new pause menu
+     * This menu is shown when the user pauses the game / presses
+     *  the esc button during the game.
+     * @param skin Contains the skin pack to be used with menu
+     */
+    public BankruptMenu(Skin skin) {
+
+<span class="fc" id="L37">        super(&quot;&quot;, skin);</span>
+
+<span class="fc" id="L39">        this.setSize(800, 400);</span>
+<span class="fc" id="L40">        this.setModal(true);</span>
+<span class="fc" id="L41">        this.setMovable(false);</span>
+<span class="fc" id="L42">        this.setResizable(false);</span>
+
+<span class="fc" id="L44">        Label message = new Label(&quot;Whoops looks like you're out of money to do that action&quot;, skin);</span>
+<span class="fc" id="L45">        this.add(message).padBottom(20).row();</span>
+<span class="fc" id="L46">        this.setBackground(new TextureRegionDrawable(new Texture(&quot;png/background.png&quot;)));</span>
+
+<span class="fc" id="L48">        quitBtn = new TextButton(&quot;Dismiss&quot;, skin);</span>
+<span class="fc" id="L49">        this.add(quitBtn).pad(10);</span>
+
+        // Created for yes - no game events
+        // The Popup needs to call back to parent object in someway
+<span class="fc" id="L53">        quitBtn.addListener(new ClickListener() {</span>
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+<span class="nc" id="L56">                com.vikingz.campustycoon.Util.ScreenUtils.resetInputProcessor();</span>
+<span class="nc" id="L57">                ((GameplayScreen) ScreenUtils.gameplayScreen).setPaused(false);</span>
+<span class="nc" id="L58">                ((GameplayScreen) ScreenUtils.gameplayScreen).setBankrupt(false);</span>
+<span class="nc" id="L59">                remove();</span>
+<span class="nc" id="L60">            }</span>
+        });
+<span class="fc" id="L62">    }</span>
+
+    public void clickQuit(){
+<span class="fc" id="L65">        quitBtn.toggle();</span>
+<span class="fc" id="L66">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

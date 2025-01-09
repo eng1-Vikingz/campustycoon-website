@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Drawer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon.Util</a> &gt; <span class="el_source">Drawer.java</span></div><h1>Drawer.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon.Util;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
+
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+
+import com.vikingz.campustycoon.UI.Components.Component;
+import com.vikingz.campustycoon.UI.Components.Sprite;
+import com.vikingz.campustycoon.Util.Types.Coordinate;
+
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+
+<span class="nc" id="L22">public class Drawer {</span>
+<span class="nc" id="L23">	private static List&lt;DrawInfo&gt; drawQueue = new LinkedList&lt;&gt;();</span>
+<span class="nc" id="L24">	public static SpriteBatch spriteBatch = new SpriteBatch();</span>
+<span class="nc" id="L25">	private static BitmapFont font = new BitmapFont();</span>
+<span class="nc" id="L26">	private static Map&lt;String, Texture&gt; textures = new HashMap&lt;String, Texture&gt;(); // Note: this exists because I learned that generating hundreds of new textures every second is NOT a good idea</span>
+<span class="nc" id="L27">	private static Map&lt;Texture, Map&lt;Integer, TextureRegion&gt;&gt; textureRegions = new HashMap&lt;Texture, Map&lt;Integer, TextureRegion&gt;&gt;();</span>
+
+
+	// Added stage
+<span class="nc" id="L31">	public static Stage stage = new Stage();</span>
+
+
+	/**
+	 * Sets the sprite batch
+	 * @param batch
+	 */
+	public static void setSpriteBatch(SpriteBatch batch) {
+<span class="nc" id="L39">		spriteBatch = batch;</span>
+<span class="nc" id="L40">	}</span>
+	
+	/**
+	 * DrawInfo
+	 * Used as a data store
+	 */
+	public static class DrawInfo { // Cursed static class with non-static members
+		public int layer; // Used to determine draw order
+		public Component component;
+		
+<span class="fc" id="L50">		public DrawInfo(int Layer, Component Component) {</span>
+<span class="fc" id="L51">			layer = Layer;</span>
+<span class="fc" id="L52">			component = Component;</span>
+<span class="fc" id="L53">		}</span>
+	}
+	
+	/**
+	 * Gets the last draw item
+	 * @return
+	 */
+	public static DrawInfo getLastDrawItem(){
+<span class="nc" id="L61">		return drawQueue.get(drawQueue.size()-1);</span>
+	}
+	
+
+	public static void addDrawItem(DrawInfo drawInfo){
+<span class="nc" id="L66">		drawQueue.add(drawInfo);</span>
+<span class="nc" id="L67">	}</span>
+
+	/**
+	 * Pops all components from a given layer
+	 * @param &lt;T&gt;
+	 * @param layer
+	 * @param type
+	 * @return
+	 */
+	public static &lt;T&gt; List&lt;T&gt; popLayer(int layer, T type) {
+<span class="nc" id="L77">		List&lt;T&gt; layerComponents = new ArrayList&lt;T&gt;();</span>
+		
+<span class="nc" id="L79">		int left = binarySearch(layer - 1);</span>
+<span class="nc" id="L80">		int right = binarySearch(layer);</span>
+<span class="nc" id="L81">		int count = right - left;</span>
+		
+<span class="nc bnc" id="L83" title="All 2 branches missed.">		for (int i = 0; i &lt; count; i++) {</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">			if (drawQueue.get(left).component.getClass() == type.getClass()) {</span>
+				@SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L86">				T component = (T)drawQueue.get(left).component; // Should be a safe cast</span>
+<span class="nc" id="L87">				layerComponents.add(component);</span>
+<span class="nc" id="L88">				drawQueue.remove(left);</span>
+			}
+		}
+<span class="nc" id="L91">		return layerComponents;</span>
+	}
+
+	public static void clear() {
+<span class="nc" id="L95">		drawQueue.clear();</span>
+<span class="nc" id="L96">	}</span>
+	
+
+
+	/**
+	 * Draws all components in the drawQueue
+	 */
+	public static void drawAll() {
+<span class="nc" id="L104">		spriteBatch.begin();</span>
+		
+
+		//Drawing the components in the drawQueue
+<span class="nc bnc" id="L108" title="All 2 branches missed.">		for (int i = 0; i &lt; drawQueue.size(); i++) {</span>
+			// drawQueue is pre-sorted, so this draws primarily in order of layer (ascending)
+			// Followed by the time the component was added to the queue (within each layer)
+			
+<span class="nc" id="L112">			Component component = drawQueue.get(i).component;</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">			if (component.sprite.usesSpriteSheet) {</span>
+<span class="nc" id="L114">				drawRegion(component);</span>
+			}
+<span class="nc bnc" id="L116" title="All 2 branches missed.">			else if (component.isText) {</span>
+<span class="nc" id="L117">				drawText(component);</span>
+			}
+			else {
+<span class="nc" id="L120">				draw(component);</span>
+			}
+		}
+
+<span class="nc" id="L124">		stage.draw();</span>
+
+<span class="nc" id="L126">		spriteBatch.end();</span>
+<span class="nc" id="L127">	}</span>
+	
+	/**
+	 * Draws text components
+	 * @param component
+	 */
+	private static void drawText(Component component) {
+		//font.setFixedWidthGlyphs(component.text);
+<span class="nc" id="L135">		font.getRegion().getTexture().setFilter(</span>
+			TextureFilter.Linear, TextureFilter.Linear);
+<span class="nc" id="L137">		font.getData().setScale(component.width, component.height);</span>
+		
+<span class="nc" id="L139">		font.draw(spriteBatch, component.text, </span>
+			component.x, component.y);
+<span class="nc" id="L141">	}</span>
+	
+	/**
+	 * Draws sprite components
+	 * @param component
+	 */
+	private static void draw(Component component) {
+<span class="nc" id="L148">		Sprite sprite = component.sprite;</span>
+<span class="nc" id="L149">		sprite.stepAnimation();</span>
+		// Important to note that the animation is stepped and then immediately retrieved for drawing
+		// This is to prevent the 1 frame of visual delay that would be caused by stepping after returning the image
+		
+<span class="nc" id="L153">		String imagePath = sprite.getImagePath();</span>
+<span class="nc" id="L154">		Texture image = getTexture(imagePath);</span>
+<span class="nc" id="L155">		spriteBatch.draw(</span>
+			image, // Image texture to draw
+			component.x, component.y, // Coordinates to draw at
+			component.width, component.height); // Size of the image
+<span class="nc" id="L159">	}</span>
+	
+	/**
+	 * Draws sprite components that use a spritesheet
+	 */
+	private static void drawRegion(Component component) {
+<span class="nc" id="L165">		Sprite sprite = component.sprite;</span>
+<span class="nc" id="L166">		sprite.stepAnimation();</span>
+		
+<span class="nc" id="L168">		String sheetPath = sprite.getImagePath();</span>
+<span class="nc" id="L169">		Texture sheet = getTexture(sheetPath);</span>
+<span class="nc" id="L170">		TextureRegion image = getTextureRegion(sheet, sprite);</span>
+<span class="nc" id="L171">		spriteBatch.draw(</span>
+			image, // Image texture (region) to draw
+			component.x, component.y, // Coordinates to draw at
+			component.width, component.height); // Size of the image
+<span class="nc" id="L175">	}</span>
+	
+	/**
+	 * Gets the texture region of a sprite from a spritesheet
+	 * @param sheet
+	 * @param sprite
+	 * @return
+	 */
+	private static TextureRegion getTextureRegion(Texture sheet, Sprite sprite) {
+<span class="nc" id="L184">		int spriteID = sprite.getID();</span>
+		
+		// If a mapping of the spriteSheet does not exist -&gt; creates new mapping
+<span class="nc bnc" id="L187" title="All 2 branches missed.">		if (!textureRegions.containsKey(sheet)) {</span>
+<span class="nc" id="L188">			Map&lt;Integer, TextureRegion&gt; regions = new HashMap&lt;Integer, TextureRegion&gt;();</span>
+<span class="nc" id="L189">			textureRegions.put(sheet, regions);</span>
+		}
+		
+<span class="nc" id="L192">		Map&lt;Integer, TextureRegion&gt; sheetRegions = textureRegions.get(sheet);</span>
+		
+		// If a mapping of the spriteID to a TextureRegion does not exist -&gt; adds that mapping
+<span class="nc bnc" id="L195" title="All 2 branches missed.">		if (!sheetRegions.containsKey(spriteID)) {</span>
+<span class="nc" id="L196">			Coordinate spriteCoords = sprite.spriteSheet.getRegionCoords(spriteID);</span>
+			
+<span class="nc" id="L198">			sheetRegions.put(spriteID, new TextureRegion(</span>
+				sheet, // Spritesheet to get sprite from
+				spriteCoords.x, spriteCoords.y, // Coordinates of the sprite within the spritesheet
+				sprite.spriteSheet.spriteWidth, sprite.spriteSheet.spriteHeight)); // Sprite dimensions
+		}
+		
+<span class="nc" id="L204">		return sheetRegions.get(spriteID);</span>
+	}
+	
+	private static Texture getTexture(String imagePath) {
+<span class="nc bnc" id="L208" title="All 2 branches missed.">		if (!textures.containsKey(imagePath)) {</span>
+<span class="nc" id="L209">			textures.put(imagePath, new Texture(imagePath));</span>
+		}
+<span class="nc" id="L211">		return textures.get(imagePath);</span>
+	}
+	
+	// Updates every component in the drawQueue (usually needed due to screen resolution changes)
+	public static void updateAll() {
+<span class="nc bnc" id="L216" title="All 2 branches missed.">		for (int i = 0; i &lt; drawQueue.size(); i++) {</span>
+<span class="nc" id="L217">			drawQueue.get(i).component.update();</span>
+		}
+<span class="nc" id="L219">	}</span>
+	
+	// Adds the new component to the drawQueue at the end of the given layer
+	public static void add(int layer, Component component) {
+<span class="nc" id="L223">		drawQueue.add(binarySearch(layer), new DrawInfo(layer, component));</span>
+<span class="nc" id="L224">	}</span>
+	
+	public static void remove(int layer, Component component) {
+<span class="nc" id="L227">		remove(component, binarySearch(layer - 1));</span>
+<span class="nc" id="L228">	}</span>
+	
+	public static void remove(Component component) {
+<span class="nc" id="L231">		remove(component, 0);</span>
+<span class="nc" id="L232">	}</span>
+	
+	// Removes the given component from the drawQueue
+	// Does a linear search of the drawQueue starting from the index given by startIndex
+	private static void remove(Component component, int startIndex) {
+<span class="nc bnc" id="L237" title="All 2 branches missed.">		for (int index = startIndex; index &lt; drawQueue.size(); index++) {</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">			if (drawQueue.get(index).component.equals(component)) {</span>
+<span class="nc" id="L239">				drawQueue.remove(index);</span>
+<span class="nc" id="L240">				return;</span>
+			}
+		}
+<span class="nc" id="L243">	}</span>
+	
+	// Searches the drawQueue to find the index of the end of a given layer
+	// e.g. in {-1, 0, 0, 1, 1, 1, 2, 2}, searching for '1' would give the index of the first 2
+	private static int binarySearch(int target) {
+		
+		// haha could have used this
+<span class="nc" id="L250">		Collections.binarySearch(null, null);</span>
+
+<span class="nc" id="L252">		int left = 0;</span>
+<span class="nc" id="L253">		int right = drawQueue.size() - 1;</span>
+<span class="nc" id="L254">		int midpoint = 0;</span>
+		
+<span class="nc bnc" id="L256" title="All 2 branches missed.">		if (drawQueue.size() &lt;= 1) {</span>
+<span class="nc" id="L257">			return drawQueue.size();</span>
+		}
+<span class="nc bnc" id="L259" title="All 2 branches missed.">		if (drawQueue.get(left).layer &gt; target) {</span>
+<span class="nc" id="L260">			return 0;</span>
+		}
+<span class="nc bnc" id="L262" title="All 2 branches missed.">		if (drawQueue.get(right).layer &lt; target) {</span>
+<span class="nc" id="L263">			return right + 1;</span>
+		}
+		
+<span class="nc bnc" id="L266" title="All 2 branches missed.">		while (right - left &gt; 1) {</span>
+<span class="nc" id="L267">			midpoint = (left + right) / 2;</span>
+<span class="nc" id="L268">			int value = drawQueue.get(midpoint).layer;</span>
+			
+<span class="nc bnc" id="L270" title="All 2 branches missed.">			if (value &lt;= target) {</span>
+<span class="nc" id="L271">				left = midpoint;</span>
+<span class="nc" id="L272">				continue;</span>
+			}
+<span class="nc bnc" id="L274" title="All 2 branches missed.">			if (value &gt; target) {</span>
+<span class="nc" id="L275">				right = midpoint;</span>
+<span class="nc" id="L276">				continue;</span>
+			}
+<span class="nc" id="L278">		}</span>
+<span class="nc" id="L279">		midpoint = (left + right) / 2;</span>
+<span class="nc" id="L280">		return midpoint + 1;</span>
+	}
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

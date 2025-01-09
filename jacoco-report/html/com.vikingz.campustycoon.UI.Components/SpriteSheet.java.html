@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SpriteSheet.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon.UI.Components</a> &gt; <span class="el_source">SpriteSheet.java</span></div><h1>SpriteSheet.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon.UI.Components;
+
+import com.vikingz.campustycoon.Util.Types.Coordinate;
+
+/**
+ * This class is used to create a sprite sheet.
+ */
+public class SpriteSheet {
+	public String imagePath;
+	public int spriteWidth; // Width of each sprite in the spriteSheet (assumes all sprites in the sheet are the same dimensions)
+	public int spriteHeight; // Height of each sprite in the spriteSheet
+	private int sheetWidth; // Width of the entire sheet (in units of spriteWidth)
+	private int sheetHeight; // Height of the entire sheet (in units of spriteHeight)
+	
+	/**
+	 * Constructor for the SpriteSheet class.
+	 * @param ImagePath
+	 * @param SheetWidth
+	 * @param SheetHeight
+	 * @param SpriteWidth
+	 * @param SpriteHeight
+	 */
+<span class="fc" id="L23">	public SpriteSheet(String ImagePath, int SheetWidth, int SheetHeight, int SpriteWidth, int SpriteHeight) {</span>
+		
+<span class="fc" id="L25">		imagePath = ImagePath;</span>
+<span class="fc" id="L26">		spriteWidth = SpriteWidth;</span>
+<span class="fc" id="L27">		spriteHeight = SpriteHeight;</span>
+		
+		// width (how many sprites fit in a row) = width (in pixels) / spriteWidth (in pixels)
+<span class="fc" id="L30">		sheetWidth = SheetWidth;  </span>
+<span class="fc" id="L31">		sheetHeight = SheetHeight;</span>
+<span class="fc" id="L32">	}</span>
+	
+	/**
+	 * Get the coordinates of a sprite in the sprite sheet.
+	 * @param spriteID
+	 * @return
+	 */
+	public Coordinate getRegionCoords(int spriteID) {
+<span class="nc" id="L40">		Coordinate coord = new Coordinate(</span>
+			(spriteID % sheetWidth) * spriteWidth, // x
+			(spriteID / sheetHeight) * spriteHeight // y
+		);
+<span class="nc" id="L44">		return coord;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

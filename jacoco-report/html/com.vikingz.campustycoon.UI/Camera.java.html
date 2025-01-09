@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Camera.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon.UI</a> &gt; <span class="el_source">Camera.java</span></div><h1>Camera.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon.UI;
+
+import java.util.List;
+
+import com.vikingz.campustycoon.Game.Buildings.Building;
+import com.vikingz.campustycoon.Game.Maps.Map;
+import com.vikingz.campustycoon.Game.Tiles.Lake;
+import com.vikingz.campustycoon.Game.Tiles.Tile;
+import com.vikingz.campustycoon.UI.Components.MapBuilding;
+import com.vikingz.campustycoon.UI.Components.MapTile;
+import com.vikingz.campustycoon.UI.Systems.BuildingDisplay;
+import com.vikingz.campustycoon.UI.Systems.MapDisplay;
+import com.vikingz.campustycoon.Util.Drawer;
+import com.vikingz.campustycoon.Util.GameUtils;
+import com.vikingz.campustycoon.Util.MapUtils;
+import com.vikingz.campustycoon.Util.ScreenUtils;
+import com.vikingz.campustycoon.Util.Types.Coordinate;
+
+/**
+ * This class is used to create a camera.
+ * Controls zooming, movement etc.
+ */
+<span class="nc" id="L23">public class Camera {</span>
+	public static Map map; // The game map
+	public static int gridX, gridY; // Current grid coordinates of the mouse
+<span class="fc" id="L26">	public static int x = 0, y = 0; // Current coordinates of the camera</span>
+<span class="fc" id="L27">	public static int width = Window.defaultWidth, height = Window.defaultHeight;</span>
+<span class="fc" id="L28">	public static float zoom = 1;</span>
+	private static final float MinZoom = 0.375f, MaxZoom = 2.75f;
+	private static final int ZoomSpeed = 8; // Lower = faster
+<span class="fc" id="L31">	private static Coordinate lastMousePos = new Coordinate();</span>
+<span class="fc" id="L32">	private static Coordinate lastClickPos = null;</span>
+	private static boolean placing;
+	private static String placementType;
+	private static Building hoverDisplay;
+
+	/**
+	 * Updates the camera.
+	 */
+	public static void update() {
+<span class="nc" id="L41">		printCameraInfo();</span>
+<span class="nc" id="L42">		updateDrawTiles();</span>
+<span class="nc" id="L43">		updateDrawBuildings();</span>
+<span class="nc" id="L44">		drawCursor();</span>
+<span class="nc" id="L45">	}</span>
+
+	/**
+	 * Calculates which Grid coordinate the mouse is over
+	 * @param X
+	 * @return
+	 */
+	private static float getGridX(int X) {
+<span class="nc" id="L53">		float GridX = zoom * (X - x) / (Tile.SpriteSize);</span>
+<span class="nc" id="L54">		return GridX;</span>
+	}
+
+	private static float getGridY(int Y) {
+<span class="nc" id="L58">		float GridY = zoom * (Window.height - Y - y) / (Tile.SpriteSize);</span>
+<span class="nc" id="L59">		return GridY;</span>
+	}
+
+	public static void drawCursor() {
+		// Game not started yet
+<span class="nc bnc" id="L64" title="All 2 branches missed.">		if (ScreenUtils.currentScreen != ScreenUtils.gameplayScreen) {</span>
+<span class="nc" id="L65">			return;</span>
+		}
+
+		// Game not initialised yet
+<span class="nc bnc" id="L69" title="All 2 branches missed.">		if (map == null) {</span>
+<span class="nc" id="L70">			return;</span>
+		}
+
+		// If placing is false and was false last check too
+<span class="nc bnc" id="L74" title="All 4 branches missed.">		if (placing == false &amp;&amp; placing == map.placing) {</span>
+<span class="nc" id="L75">			return;</span>
+		}
+
+		// If placing was just turned off
+<span class="nc bnc" id="L79" title="All 4 branches missed.">		if (placing == true &amp;&amp; placing != map.placing) {</span>
+<span class="nc" id="L80">			placing = false;</span>
+<span class="nc" id="L81">			Drawer.remove(hoverDisplay.drawInfo);</span>
+<span class="nc" id="L82">			return;</span>
+		}
+
+		// If the hover icon just changed
+<span class="nc bnc" id="L86" title="All 8 branches missed.">		if (map != null &amp;&amp; hoverDisplay != null &amp;&amp;</span>
+		placing == true &amp;&amp; map.placementType != placementType) {
+<span class="nc" id="L88">			Drawer.remove(hoverDisplay.drawInfo);</span>
+
+<span class="nc" id="L90">			hoverDisplay = MapUtils.getBuilding(map.placementType);</span>
+<span class="nc" id="L91">			hoverDisplay.drawInfo.setImage(</span>
+<span class="nc" id="L92">				GameUtils.getHoverImagePath(hoverDisplay.drawInfo.sprite.getImagePath()));</span>
+
+<span class="nc" id="L94">			Drawer.add(BuildingDisplay.Layer + 1, hoverDisplay.drawInfo);</span>
+
+<span class="nc" id="L96">			placementType = map.placementType;</span>
+		}
+
+		// If placing mode was just turned on
+<span class="nc bnc" id="L100" title="All 2 branches missed.">		else if (placing != map.placing) {</span>
+<span class="nc" id="L101">			placing = true;</span>
+
+<span class="nc" id="L103">			hoverDisplay = MapUtils.getBuilding(map.placementType);</span>
+<span class="nc" id="L104">			hoverDisplay.drawInfo.setImage(</span>
+<span class="nc" id="L105">				GameUtils.getHoverImagePath(hoverDisplay.drawInfo.sprite.getImagePath()));</span>
+
+
+<span class="nc" id="L108">			Drawer.add(BuildingDisplay.Layer + 1, hoverDisplay.drawInfo);</span>
+		}
+
+<span class="nc" id="L111">		hoverDisplay.setPosition(new Coordinate(gridX, gridY));</span>
+<span class="nc" id="L112">		updateCursor();</span>
+<span class="nc" id="L113">	}</span>
+
+	/**
+	 * Checks which tile the mouse is over
+	 * @param X
+	 * @param Y
+	 */
+	public static void checkMouseOverTile(int X, int Y) {
+<span class="nc" id="L121">		lastMousePos = new Coordinate(X, Y);</span>
+
+<span class="nc" id="L123">		gridX = (int)Math.floor((double)getGridX(X));</span>
+<span class="nc" id="L124">		gridY = (int)Math.floor((double)getGridY(Y));</span>
+
+
+		//System.out.println(&quot;X: &quot; + X + &quot;, Y: &quot; + Y);
+		//System.out.println(&quot;Grid X: &quot; + gridX + &quot;, Grid Y: &quot; + gridY);
+<span class="nc" id="L129">	}</span>
+
+    public static Tile getMouseOverTile() {
+<span class="nc" id="L132">        return map.grid.get(map.grid.size()-Camera.gridY-1).get(Camera.gridX);</span>
+    }
+
+	/**
+	 * Gets the tile from the grid coordinates
+	 * @param X
+	 * @param Y
+	 * @return
+	 */
+    public static Tile getTileFromCoords(int X, int Y){
+
+        try {
+<span class="fc" id="L144">            int gridWidth = X;</span>
+<span class="fc" id="L145">            int gridHeight = Y;</span>
+<span class="nc" id="L146">            return map.grid.get(map.grid.size() - gridHeight - 1).get(gridWidth);</span>
+        }
+<span class="fc" id="L148">        catch (Exception e){</span>
+<span class="fc" id="L149">            return new Lake();</span>
+        }
+    }
+
+	/**
+	 * Zooms the camera
+	 * @param scrollAmount
+	 */
+	public static void scroll(float scrollAmount) {
+<span class="nc" id="L158">		float oldZoom = zoom;</span>
+
+<span class="nc" id="L160">		zoom += scrollAmount / ZoomSpeed;</span>
+<span class="nc" id="L161">		zoom = Math.min(MaxZoom, Math.max(MinZoom, zoom));</span>
+
+<span class="nc" id="L163">		float sign = Math.signum(zoom - oldZoom);</span>
+<span class="nc" id="L164">		x = Math.round(x * (oldZoom / zoom) + (sign * 64f) / zoom); // 64f makes sense as it is the tile sprite width</span>
+<span class="nc" id="L165">		y = Math.round(y * (oldZoom / zoom) + (sign * 36f) / zoom); // 36f does not make any sense at all (but it works)</span>
+
+<span class="nc" id="L167">		checkMouseOverTile(lastMousePos.x, lastMousePos.y);</span>
+<span class="nc" id="L168">		drawCursor();</span>
+<span class="nc" id="L169">		update();</span>
+<span class="nc" id="L170">	}</span>
+
+	private static void placeBuilding() {
+<span class="nc bnc" id="L173" title="All 2 branches missed.">		if (ScreenUtils.currentScreen == ScreenUtils.gameplayScreen) {</span>
+<span class="nc" id="L174">			map.placeBuilding(new Coordinate(gridX, gridY));</span>
+<span class="nc" id="L175">			update();</span>
+		}
+<span class="nc" id="L177">	}</span>
+
+	public static void lift(int X, int Y, int button) {
+		// TODO: Add a time based check to this too
+		// Checks that the mouse has barely moved since clicking
+<span class="nc bnc" id="L182" title="All 2 branches missed.">		if (lastClickPos != null &amp;&amp;</span>
+<span class="nc bnc" id="L183" title="All 2 branches missed.">		lastClickPos.distance(new Coordinate(X, Y)) &lt; 5) { // 5 is an extremely arbitrary number</span>
+<span class="nc" id="L184">			placeBuilding();</span>
+		}
+<span class="nc" id="L186">	}</span>
+
+	public static void click(int X, int Y, int button) {
+<span class="nc" id="L189">		lastMousePos = new Coordinate(X, Y);</span>
+<span class="nc" id="L190">		lastClickPos = lastMousePos;</span>
+<span class="nc" id="L191">	}</span>
+
+	public static void drag(int mouseX, int mouseY) {
+<span class="nc" id="L194">		x += mouseX - lastMousePos.x;</span>
+<span class="nc" id="L195">		y -= mouseY - lastMousePos.y;</span>
+<span class="nc" id="L196">		lastMousePos = new Coordinate(mouseX, mouseY);</span>
+<span class="nc" id="L197">		update();</span>
+<span class="nc" id="L198">	}</span>
+
+	private static List&lt;MapTile&gt; popDrawTiles() {
+<span class="nc" id="L201">		List&lt;MapTile&gt; components = Drawer.popLayer(MapDisplay.Layer, new MapTile());</span>
+<span class="nc" id="L202">		return components;</span>
+	}
+
+	private static void updateDrawTiles() {
+<span class="nc" id="L206">		List&lt;MapTile&gt; tiles = popDrawTiles();</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">		for (MapTile tile : tiles) {</span>
+<span class="nc" id="L208">			tile.setOffset(x, y);</span>
+<span class="nc" id="L209">			tile.setScale(1f / zoom);</span>
+<span class="nc" id="L210">			tile.applyZoomOffset();</span>
+<span class="nc" id="L211">			Drawer.add(MapDisplay.Layer, tile);</span>
+<span class="nc" id="L212">		}</span>
+<span class="nc" id="L213">	}</span>
+
+	private static void updateDrawBuildings() {
+<span class="nc" id="L216">		List&lt;MapBuilding&gt; buildings = Drawer.popLayer(BuildingDisplay.Layer, new MapBuilding());</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">		for (MapBuilding building : buildings) {</span>
+<span class="nc" id="L218">			building.setOffset(x, y);</span>
+<span class="nc" id="L219">			building.setScale(1f / zoom);</span>
+<span class="nc" id="L220">			building.applyZoomOffset();</span>
+<span class="nc" id="L221">			Drawer.add(BuildingDisplay.Layer, building);</span>
+<span class="nc" id="L222">		}</span>
+<span class="nc" id="L223">	}</span>
+
+	private static void updateCursor() {
+<span class="nc bnc" id="L226" title="All 2 branches missed.">		if (hoverDisplay == null) {</span>
+<span class="nc" id="L227">			return;</span>
+		}
+
+<span class="nc" id="L230">		hoverDisplay.drawInfo.setOffset(x, y);</span>
+<span class="nc" id="L231">		hoverDisplay.drawInfo.setScale(1f / zoom);</span>
+<span class="nc" id="L232">		hoverDisplay.drawInfo.applyZoomOffset();</span>
+		//System.out.println(hoverDisplay.drawInfo.scale);
+		//System.out.println(hoverDisplay.drawInfo.baseWidth);
+<span class="nc" id="L235">	}</span>
+
+	// For debug purposes
+	private static void printCameraInfo() {
+		//System.out.println(&quot;X: &quot; + x + &quot;, Y: &quot; + y +
+		//	&quot;\nWidth: &quot; + width + &quot;, Height: &quot; + height +
+		//	&quot;\nZoom: &quot; + zoom);
+<span class="nc" id="L242">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

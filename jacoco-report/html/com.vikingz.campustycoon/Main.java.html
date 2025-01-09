@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon;
+
+import com.vikingz.campustycoon.Util.GameMusic;
+import com.vikingz.campustycoon.Util.GameSounds;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+
+import com.vikingz.campustycoon.Game.GameLogic.EventLoader;
+import com.vikingz.campustycoon.UI.Screens.StartScreen;
+import com.vikingz.campustycoon.Util.InputHandler;
+import com.vikingz.campustycoon.Util.ScreenUtils;
+
+/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
+<span class="fc" id="L15">public class Main extends Game {</span>
+    @Override
+    public void create() {
+		//Gdx.graphics.setForegroundFPS(60); // Useful function for settings menu later
+        //Gdx.graphics.setContinuousRendering(false); // Interesting function to explore later
+        //(^if rendering performance becomes an issue)
+
+
+<span class="fc" id="L23">        Gdx.graphics.setTitle(&quot;Campus Tycoon&quot;);</span>
+<span class="fc" id="L24">        Gdx.input.setInputProcessor(new InputHandler());</span>
+
+
+        //Loads events
+<span class="fc" id="L28">        new EventLoader(&quot;event.yml&quot;);</span>
+
+        //Initialises Music and starts Music
+<span class="fc" id="L31">        new GameMusic();</span>
+<span class="fc" id="L32">        GameMusic.play();</span>
+
+        //Initialise Sounds and starts Sounds
+<span class="fc" id="L35">        new GameSounds();</span>
+
+
+		// Sets the screen to the Main Menu
+<span class="nc" id="L39">		Screen screen = new StartScreen();</span>
+<span class="nc" id="L40">		ScreenUtils.currentScreen = screen;</span>
+<span class="nc" id="L41">		setScreen(screen);</span>
+<span class="nc" id="L42">	}</span>
+
+	@Override
+	public void render () {
+
+<span class="nc bnc" id="L47" title="All 2 branches missed.">		if (screen != null) screen.render(Gdx.graphics.getDeltaTime());</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">		if (ScreenUtils.currentScreen != screen) { setScreen(ScreenUtils.currentScreen); }</span>
+<span class="nc" id="L49">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

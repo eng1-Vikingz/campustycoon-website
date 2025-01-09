@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameSounds.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon.Util</a> &gt; <span class="el_source">GameSounds.java</span></div><h1>GameSounds.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon.Util;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
+
+import java.util.Random;
+
+<span class="fc" id="L8">public class GameSounds {</span>
+
+    // Load the sounds fx
+<span class="fc" id="L11">    private static final Sound placeBuilding1 = Gdx.audio.newSound(Gdx.files.internal(&quot;audio/place_1.ogg&quot;));</span>
+<span class="fc" id="L12">    private static final Sound placeBuilding2 = Gdx.audio.newSound(Gdx.files.internal(&quot;audio/place_2.ogg&quot;));</span>
+<span class="fc" id="L13">    private static final Sound placeBuilding3 = Gdx.audio.newSound(Gdx.files.internal(&quot;audio/place_3.ogg&quot;));</span>
+
+<span class="fc" id="L15">    private static final Sound placeError1 = Gdx.audio.newSound(Gdx.files.internal(&quot;audio/place_error_1.ogg&quot;));</span>
+<span class="fc" id="L16">    private static final Sound placeError2 = Gdx.audio.newSound(Gdx.files.internal(&quot;audio/place_error_2.ogg&quot;));</span>
+
+    //Sets the volume of the GameSounds to be played
+<span class="fc" id="L19">    public static float volume = 1f;</span>
+
+    // Could be useful for more sounds later on
+    // private static final ArrayList&lt;Sound&gt; sounds = new ArrayList&lt;&gt;() {
+    //     {
+    //         add(placeBuilding1);
+    //         add(placeBuilding2);
+    //         add(placeBuilding3);
+    //         add(placeError1);
+    //         add(placeError2);
+    //     }
+    // };
+
+    /**
+     * Plays the placed building sound
+     */
+    public static boolean playPlacedBuilding() {
+<span class="fc" id="L36">        int randNum = new Random().nextInt(1, 4);</span>
+
+<span class="pc bpc" id="L38" title="3 of 4 branches missed.">        switch (randNum) {</span>
+            case 1:
+<span class="nc" id="L40">                placeBuilding1.play(volume);</span>
+<span class="nc" id="L41">                return true;</span>
+            case 2:
+<span class="fc" id="L43">                placeBuilding2.play(volume);</span>
+<span class="fc" id="L44">                return true;</span>
+            case 3:
+<span class="nc" id="L46">                placeBuilding3.play(volume);</span>
+<span class="nc" id="L47">                return true;</span>
+        }
+<span class="nc" id="L49">        return false;</span>
+    }
+
+
+    /**
+     * Plays the error sounds when the user tries
+     * placing a building somewhere illegal
+     */
+    public static boolean playPlaceError() {
+<span class="fc" id="L58">        int randNum = new Random().nextInt(1, 3);</span>
+
+<span class="pc bpc" id="L60" title="2 of 3 branches missed.">        switch (randNum) {</span>
+            case 1:
+<span class="fc" id="L62">                placeError1.play(volume);</span>
+<span class="fc" id="L63">                return true;</span>
+            case 2:
+<span class="nc" id="L65">                placeError2.play(volume);</span>
+<span class="nc" id="L66">                return true;</span>
+        }
+<span class="nc" id="L68">        return false;</span>
+    }
+
+    /**
+     * Gets the volume
+     *
+     * @return Float Volume level
+     */
+    public static float getVolume() {
+<span class="fc" id="L77">        return volume;</span>
+    }
+
+    /**
+     * Sets the volume level
+     *
+     * @param volume New volume level
+     */
+    public static void setVolume(float volume) {
+<span class="fc" id="L86">        GameSounds.volume = volume;</span>
+<span class="fc" id="L87">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

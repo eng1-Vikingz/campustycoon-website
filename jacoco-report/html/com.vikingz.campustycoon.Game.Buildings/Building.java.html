@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Building.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon.Game.Buildings</a> &gt; <span class="el_source">Building.java</span></div><h1>Building.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon.Game.Buildings;
+
+import com.vikingz.campustycoon.Game.GameLogic.BuildingCounter;
+import com.vikingz.campustycoon.UI.Components.MapBuilding;
+import com.vikingz.campustycoon.UI.Components.Component.Anchor;
+import com.vikingz.campustycoon.Util.Types.Coordinate;
+
+/**
+ * The Building class represents a building in the game.
+ * It provides properties and behaviors for all buildings in the game.
+ * This class includes methods to increment the building counter and constructors to initialize the building.
+ */
+public class Building {
+<span class="fc" id="L14">	public String buildingName = &quot;null&quot;; // Used in the BuildingCounter</span>
+	public MapBuilding drawInfo;
+	public Coordinate position;
+	public int width, height;
+    public int cost;
+    public int score;
+
+	/**
+	 * Constructs a building with the default position (0, 0).
+	 * The default building is a 1x1 building with a cost of 100.
+	 */
+<span class="fc" id="L25">	public Building() {</span>
+<span class="fc" id="L26">		width = 1;</span>
+<span class="fc" id="L27">		height = 1;</span>
+<span class="fc" id="L28">        cost =100;</span>
+<span class="fc" id="L29">		position = new Coordinate(0, 0);</span>
+<span class="fc" id="L30">		drawInfo = new MapBuilding(</span>
+			&quot;MissingTexture.png&quot;,
+			position.x, position.y);
+<span class="fc" id="L33">		drawInfo.setAnchor(Anchor.BottomLeft);</span>
+<span class="fc" id="L34">	}</span>
+
+	/**
+	 * Constructs a building with the specified position.
+	 * @param Position The coordinate position of the building.
+	 */
+<span class="fc" id="L40">	public Building(Coordinate Position) {</span>
+<span class="fc" id="L41">		width = 1;</span>
+<span class="fc" id="L42">		height = 1;</span>
+<span class="fc" id="L43">        cost =100;</span>
+<span class="fc" id="L44">		position = Position;</span>
+<span class="fc" id="L45">		drawInfo = new MapBuilding(</span>
+			&quot;MissingTexture.png&quot;,
+			position.x, position.y);
+<span class="fc" id="L48">		drawInfo.setAnchor(Anchor.BottomLeft);</span>
+<span class="fc" id="L49">	}</span>
+
+	/**
+	 * Constructs a building with the specified position, image path, cost, width, and height.
+	 * @param Position The coordinate position of the building.
+	 * @param ImagePath The path to the image file for the building.
+	 * @param Cost The cost of the building.
+	 * @param Width The width of the building.
+	 * @param Height The height of the building.
+	 */
+<span class="fc" id="L59">	protected Building(Coordinate Position, String ImagePath,int Cost,int Width, int Height) {</span>
+<span class="fc" id="L60">		position = Position;</span>
+<span class="fc" id="L61">		width = Width;</span>
+<span class="fc" id="L62">		height = Height;</span>
+<span class="fc" id="L63">        cost = Cost;</span>
+<span class="fc" id="L64">		drawInfo = new MapBuilding(</span>
+			ImagePath,
+			position.x, position.y,
+			Width, Height);
+<span class="fc" id="L68">		drawInfo.setAnchor(Anchor.BottomLeft);</span>
+<span class="fc" id="L69">	}</span>
+
+
+	/**
+	 * Sets the position of the building.
+	 * @param Position
+	 */
+	public void setPosition(Coordinate Position) {
+<span class="fc" id="L77">		position = Position;</span>
+<span class="fc" id="L78">		drawInfo.setGridCoordinates(position.x, position.y);</span>
+<span class="fc" id="L79">	}</span>
+
+	/**
+	 * Increments the building counter for the building by 1.
+	 */
+	public void incrementBuildingCounter() {
+<span class="fc" id="L85">		BuildingCounter.increaseBuildingCounter(buildingName, 1);</span>
+<span class="fc" id="L86">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon.Util</a> &gt; <span class="el_source">MapUtils.java</span></div><h1>MapUtils.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon.Util;
+
+import java.util.ArrayList;
+
+import com.vikingz.campustycoon.Game.Buildings.*;
+import com.vikingz.campustycoon.Game.Maps.Map;
+import com.vikingz.campustycoon.Game.Maps.York;
+import com.vikingz.campustycoon.Game.Tiles.*;
+import com.vikingz.campustycoon.UI.Camera;
+import com.vikingz.campustycoon.Util.Types.Coordinate;
+
+public class MapUtils {
+	private Map map;
+
+<span class="fc" id="L15">	public MapUtils(Map Map) {</span>
+<span class="fc" id="L16">		map = Map;</span>
+<span class="fc" id="L17">	}</span>
+
+<span class="nc" id="L19">	public abstract class Placement {</span>
+		public static final String AccommodationBuilding = &quot;ACCOMMODATION&quot;;
+		public static final String StudyBuilding = &quot;STUDY&quot;;
+		public static final String StudyBuilding2 = &quot;STUDY2&quot;;
+		public static final String CafeteriaBuilding = &quot;CAFETERIA&quot;;
+		public static final String RelaxationBuilding = &quot;RELAXATION&quot;;
+		public static final String RelaxationBuilding2 = &quot;RELAXATION2&quot;;
+		public static final String Road = &quot;ROAD&quot;; // Most definitely not implemented yet
+	}
+
+
+	/**
+	 * CHANGED
+	 *
+	 * To create a new building, i created a new {@class Placement} which
+	 * just loads a different texture for the study building.
+	 *
+	 * TODO:
+	 * Do the same for the other types of buildings as for study
+	 *
+	 * @param buildingType
+	 * @return
+	 */
+	public static Building getBuilding(String buildingType) {
+<span class="fc bfc" id="L43" title="All 7 branches covered.">		switch (buildingType) {</span>
+			case Placement.AccommodationBuilding:
+<span class="fc" id="L45">				return new Accommodation();</span>
+
+			case Placement.StudyBuilding:
+<span class="fc" id="L48">				return new Study(0);</span>
+
+			case Placement.StudyBuilding2:
+<span class="fc" id="L51">				return new Study(1);</span>
+
+			case Placement.CafeteriaBuilding:
+<span class="fc" id="L54">				return new Cafeteria();</span>
+
+			case Placement.RelaxationBuilding:
+<span class="fc" id="L57">				return new Relaxation(0);</span>
+
+		    case Placement.RelaxationBuilding2:
+<span class="fc" id="L60">				return new Relaxation(1);</span>
+			default:
+<span class="fc" id="L62">				return new Building();</span>
+		}
+	}
+
+	public boolean buildingPlaceable(Building newBuilding) {
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">		for (Building Building : Map.buildings) {</span>
+<span class="nc" id="L68">			Coordinate b = Building.position;</span>
+<span class="nc" id="L69">			Coordinate newPos = newBuilding.position;</span>
+
+			// Checks if the position of the new building would cause any part of itself to overlap with an existing building
+<span class="nc bnc" id="L72" title="All 8 branches missed.">			if (newPos.x + newBuilding.width - 1 &gt;= b.x &amp;&amp; newPos.x &lt; b.x + Building.width &amp;&amp;</span>
+				newPos.y + newBuilding.height - 1 &gt;= b.y &amp;&amp; newPos.y &lt; b.y + Building.height) {
+<span class="nc" id="L74">					return false;</span>
+				}
+<span class="nc" id="L76">		}</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        for (int x=0; x &lt; newBuilding.width; x++){</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">            for (int y=0; y &lt; newBuilding.height;y++){</span>
+                //Checks for placing over water
+                //System.out.println(Camera.getTileFromCoords(newBuilding.position.x+x,newBuilding.position.y+y));
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">                if (Camera.getTileFromCoords(newBuilding.position.x+x,newBuilding.position.y+y).getTileID() == 1){</span>
+<span class="fc" id="L82">                    return false;</span>
+                }
+            }
+        }
+<span class="nc" id="L86">		return true;</span>
+	}
+
+	public boolean tileHasBuilding(Coordinate tile) {
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">		for (Building building : Map.buildings) {</span>
+<span class="nc" id="L91">			Coordinate pos = building.position;</span>
+
+			// Checks if a building occupies the current tile space
+<span class="nc bnc" id="L94" title="All 8 branches missed.">			if (tile.x &gt;= pos.x &amp;&amp; tile.x &lt; pos.x + building.width &amp;&amp;</span>
+				tile.y &gt;= pos.y &amp;&amp; tile.y &lt; pos.y + building.height) {
+<span class="nc" id="L96">					return true;</span>
+				}
+<span class="nc" id="L98">		}</span>
+
+<span class="fc" id="L100">		return false;</span>
+	}
+
+	public boolean outsideMap(Coordinate tile) {
+<span class="nc bnc" id="L104" title="All 8 branches missed.">		if (tile.x &gt;= map.width || tile.x &lt; 0 ||</span>
+				tile.y &gt;= map.height || tile.y &lt; 0) {
+<span class="nc" id="L106">			return true;</span>
+		}
+<span class="nc" id="L108">		return false;</span>
+	}
+
+
+	public void initialiseBuildings() {
+<span class="nc" id="L113">		Map.buildings = new ArrayList&lt;Building&gt;();</span>
+
+
+		// Forcefully enables placement mode
+		//map.placing = true;
+
+		// Adds a few different buildings to the map
+<span class="nc" id="L120">		map.placementType = Placement.CafeteriaBuilding;</span>
+<span class="nc" id="L121">		map.placeBuildingBypass(new Coordinate(4, 5));</span>
+
+<span class="nc" id="L123">		map.placementType = Placement.StudyBuilding;</span>
+<span class="nc" id="L124">		map.placeBuildingBypass(new Coordinate(10, 13));</span>
+
+
+<span class="nc" id="L127">		map.placementType = Placement.AccommodationBuilding;</span>
+<span class="nc" id="L128">		map.placeBuildingBypass(new Coordinate(23, 14));</span>
+<span class="nc" id="L129">	}</span>
+
+	public void initialiseGrid() {
+		// Read map file from somewhere
+		// Format:
+		// 		width height
+		//		mapTileID
+		// e.g. 3 3
+		//		0 0 1
+		//		0 1 1
+		// 		1 2 1
+
+<span class="nc" id="L141">		String content = &quot;&quot;;</span>
+		try {
+			//byte[] byteContent = getClass().getResourceAsStream(Map.defaultMap).readAllBytes();
+			//content = new String(byteContent, StandardCharsets.UTF_8);
+<span class="nc" id="L145">			content = York.RawMap;</span>
+		}
+<span class="nc" id="L147">		catch (Exception e) { }</span>
+
+<span class="nc" id="L149">		String[] lines = content.split(&quot;\n&quot;);</span>
+
+<span class="nc" id="L151">		String[] size = lines[0].split(&quot; &quot;);</span>
+<span class="nc" id="L152">		map.width = Integer.parseInt(size[0].toString().strip());</span>
+<span class="nc" id="L153">		map.height = Integer.parseInt(size[1].toString().strip());</span>
+
+<span class="nc" id="L155">		map.grid = new ArrayList&lt;ArrayList&lt;Tile&gt;&gt;(map.height);</span>
+
+<span class="nc bnc" id="L157" title="All 2 branches missed.">		for (int i = 0; i &lt; map.height; i++) {</span>
+<span class="nc" id="L158">			ArrayList&lt;Tile&gt; row = new ArrayList&lt;Tile&gt;(map.width);</span>
+<span class="nc" id="L159">			String[] tiles = lines[1 + i].split(&quot; &quot;);</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">			for (int j = 0; j &lt; map.width; j++) {</span>
+<span class="nc" id="L161">				Tile tile = getTile(Integer.parseInt(tiles[j].strip()));</span>
+<span class="nc" id="L162">				row.add(tile);</span>
+			}
+<span class="nc" id="L164">		map.grid.add(row);</span>
+		}
+<span class="nc" id="L166">	}</span>
+
+	public Tile getTile(int tileID) {
+		Tile tile;
+<span class="nc bnc" id="L170" title="All 4 branches missed.">		switch (tileID) {</span>
+			case 0:
+<span class="nc" id="L172">				tile = new Grass();</span>
+<span class="nc" id="L173">				break;</span>
+			case 1:
+<span class="nc" id="L175">				tile = new Lake();</span>
+<span class="nc" id="L176">				break;</span>
+			case 2:
+<span class="nc" id="L178">				tile = new Mountain();</span>
+<span class="nc" id="L179">				break;</span>
+			default:
+<span class="nc" id="L181">				System.out.println(&quot;Unknown tile ID: \&quot;&quot; + tileID + &quot;\&quot;&quot;);</span>
+<span class="nc" id="L182">				tile = null;</span>
+		}
+<span class="nc" id="L184">		return tile;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

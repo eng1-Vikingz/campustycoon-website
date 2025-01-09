@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon.Util</a> &gt; <span class="el_source">GameUtils.java</span></div><h1>GameUtils.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon.Util;
+
+import java.util.Arrays;
+import java.util.List;
+
+import com.vikingz.campustycoon.Game.Buildings.*;
+import com.vikingz.campustycoon.Game.GameLogic.*;
+import com.vikingz.campustycoon.Game.Maps.Map;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+
+import com.vikingz.campustycoon.UI.Camera;
+import com.vikingz.campustycoon.UI.Components.Backdrop;
+import com.vikingz.campustycoon.UI.Components.Button;
+import com.vikingz.campustycoon.UI.Components.Component;
+import com.vikingz.campustycoon.UI.Components.MenuText;
+import com.vikingz.campustycoon.UI.Components.Component.Actions;
+import com.vikingz.campustycoon.UI.Components.Component.Anchor;
+
+<span class="nc" id="L27">public class GameUtils {</span>
+	public static Map map;
+	public static Event currentEvent;
+
+
+
+
+	public static void startGame() {
+<span class="nc" id="L35">		map = new Map();</span>
+<span class="nc" id="L36">		Camera.map = map;</span>
+<span class="nc" id="L37">	}</span>
+
+	// Gets the image used for hover displays (just a semi-transparent version of the original)
+
+
+	/**
+	 * CHANGED: This was a
+	 * @param originalImage
+	 * @return
+	 */
+	public static String getHoverImagePath(String originalImage){
+<span class="fc bfc" id="L48" title="All 2 branches covered.">		if(!originalImage.isEmpty()){</span>
+<span class="fc" id="L49">			return originalImage.replace(&quot;.png&quot;, &quot;Transparent.png&quot;);</span>
+		}
+<span class="fc" id="L51">		return &quot;MissingTexture.png&quot;;</span>
+
+	}
+
+	public static void createStartMenuUI() {
+<span class="nc" id="L56">        Button buttonNewGame = new Button(&quot;New Game.png&quot;, 0, 90, 262, 66);</span>
+<span class="nc" id="L57">		buttonNewGame.setClickAction(Actions.OpenGameplayScreen);</span>
+<span class="nc" id="L58">        buttonNewGame.setAnchor(Anchor.Centre);</span>
+
+<span class="nc" id="L60">        Button buttonLeaderboard = new Button(&quot;Leaderboard.png&quot;, 0, 20, 262, 66);</span>
+<span class="nc" id="L61">        buttonLeaderboard.setClickAction(Actions.OpenLeaderboardScreen);</span>
+<span class="nc" id="L62">        buttonLeaderboard.setAnchor(Anchor.Centre);</span>
+
+<span class="nc" id="L64">        Button buttonSettings = new Button(&quot;Settings.png&quot;, 0, -50, 262, 66);</span>
+<span class="nc" id="L65">        buttonSettings.setClickAction(Actions.OpenSettingsScreen);</span>
+<span class="nc" id="L66">        buttonSettings.setAnchor(Anchor.Centre);</span>
+
+
+<span class="nc" id="L69">        List&lt;Component&gt; startScreenButtonList = Arrays.asList(</span>
+			buttonNewGame,
+			buttonLeaderboard,
+			buttonSettings);
+
+		// Add all buttons to the drawQueue
+<span class="nc bnc" id="L75" title="All 2 branches missed.">		for (Component button : startScreenButtonList) {</span>
+			// All added to layer '1' (generally on top of most other UI elements)
+<span class="nc" id="L77">			Drawer.add(1, button);</span>
+<span class="nc" id="L78">		}</span>
+
+		// Add all buttons to the InputHandler to allow for interaction handling
+		// (Allows buttons to be clicked and things to actually happen)
+<span class="nc" id="L82">		InputHandler.add(startScreenButtonList);</span>
+<span class="nc" id="L83">	}</span>
+
+	public static void createGameplayUI() {
+
+
+		//setupMenu();
+
+
+<span class="nc" id="L91">		Button buttonAccommodation = new Button(&quot;Buildings\\acom1.png&quot;, -250, 10, 90, 66);</span>
+<span class="nc" id="L92">		buttonAccommodation.setClickAction(Actions.ToggleAccommodationBuilding);</span>
+<span class="nc" id="L93">		buttonAccommodation.setAnchor(Anchor.BottomCentre);</span>
+
+<span class="nc" id="L95">		MenuText accommodationCount = new MenuText(</span>
+<span class="nc" id="L96">			String.valueOf(BuildingCounter.getBuildingCount(Accommodation.buildingName)),</span>
+			-260, 110, 2f, 2f);
+<span class="nc" id="L98">		accommodationCount.setAnchor(Anchor.BottomCentre);</span>
+<span class="nc" id="L99">		BuildingCounter.UI.add(accommodationCount);</span>
+
+
+		// ORIGINAL STUDY BTN
+<span class="nc" id="L103">        Button buttonStudy = new Button(&quot;Buildings\\rch1.png&quot;, -150, 10, 90, 66);</span>
+<span class="nc" id="L104">		buttonStudy.setClickAction(Actions.ToggleStudyBuilding);</span>
+<span class="nc" id="L105">        buttonStudy.setAnchor(Anchor.BottomCentre);</span>
+
+<span class="nc" id="L107">		MenuText studyCount = new MenuText(</span>
+<span class="nc" id="L108">			String.valueOf(BuildingCounter.getBuildingCount(Study.buildingName)),</span>
+			-160, 110, 2f, 2f);
+<span class="nc" id="L110">		studyCount.setAnchor(Anchor.BottomCentre);</span>
+<span class="nc" id="L111">		BuildingCounter.UI.add(studyCount);</span>
+
+
+
+<span class="nc" id="L115">        Button buttonCafe = new Button(&quot;Buildings\\macd.png&quot;, -50, 10, 90, 66);</span>
+<span class="nc" id="L116">		buttonCafe.setClickAction(Actions.ToggleCafeteriaBuilding);</span>
+<span class="nc" id="L117">        buttonCafe.setAnchor(Anchor.BottomCentre);</span>
+
+<span class="nc" id="L119">		MenuText cafeCount = new MenuText(</span>
+<span class="nc" id="L120">			String.valueOf(BuildingCounter.getBuildingCount(Cafeteria.buildingName)),</span>
+			-60, 110, 2f, 2f);
+<span class="nc" id="L122">		cafeCount.setAnchor(Anchor.BottomCentre);</span>
+<span class="nc" id="L123">		BuildingCounter.UI.add(cafeCount);</span>
+
+
+<span class="nc" id="L126">        Button buttonRelax = new Button(&quot;Buildings\\ysv.png&quot;, 50, 10, 90, 66);</span>
+<span class="nc" id="L127">		buttonRelax.setClickAction(Actions.ToggleRelaxationBuilding);</span>
+<span class="nc" id="L128">        buttonRelax.setAnchor(Anchor.BottomCentre);</span>
+
+<span class="nc" id="L130">        Button buttonRelax2 = new Button(&quot;Buildings\\pub.png&quot;, 150, 10, 90, 66);</span>
+<span class="nc" id="L131">		buttonRelax2.setClickAction(Actions.ToggleRelaxation2Building);</span>
+<span class="nc" id="L132">        buttonRelax2.setAnchor(Anchor.BottomCentre);</span>
+
+<span class="nc" id="L134">		MenuText relaxCount = new MenuText(</span>
+<span class="nc" id="L135">			String.valueOf(BuildingCounter.getBuildingCount(Relaxation.buildingName)),</span>
+			95, 110, 2f, 2f);
+<span class="nc" id="L137">		relaxCount.setAnchor(Anchor.BottomCentre);</span>
+<span class="nc" id="L138">		BuildingCounter.UI.add(relaxCount);</span>
+
+
+        // Button buttonPH5 = new Button(&quot;Placeholder.png&quot;, 150, 10, 90, 66);
+        // buttonPH5.setAnchor(Anchor.BottomCentre);
+
+
+
+<span class="nc" id="L146">        Button buttonDollar = new Button(&quot;Dollar.png&quot;, -300, 0, 70, 66);</span>
+<span class="nc" id="L147">        buttonDollar.setAnchor(Anchor.TopCentre);</span>
+
+<span class="nc" id="L149">        Button buttonHouses = new Button(&quot;House.png&quot;, 0, 0, 70, 66);</span>
+<span class="nc" id="L150">        buttonHouses.setAnchor(Anchor.TopCentre);</span>
+
+<span class="nc" id="L152">        Button buttonPeople = new Button(&quot;Person.png&quot;, 300, 0, 60, 66);</span>
+<span class="nc" id="L153">        buttonPeople.setAnchor(Anchor.TopCentre);</span>
+
+
+        //event
+        /*
+        Button notif1 = new Button(&quot;ExclamationMark.png&quot;, -12, 0, 100, 80);
+        notif1.setClickAction(Actions.OpenEventPopup);
+        notif1.setAnchor(Anchor.TopLeft);
+
+
+        Button notif2 = new Button(&quot;QuestionMark.png&quot;, 0, 80, 80, 80);
+        notif2.setClickAction(Actions.OpenEventPopup);
+        notif2.setAnchor(Anchor.TopLeft);
+        */
+
+<span class="nc" id="L168">        Button buttonSatisfaction = new Button(&quot;Satisfaction.png&quot;, 100, 10, 200, 66);</span>
+<span class="nc" id="L169">        buttonSatisfaction.setAnchor(Anchor.TopRight);</span>
+
+
+<span class="nc" id="L172">		List&lt;Component&gt; UIButtons = Arrays.asList(</span>
+			buttonAccommodation, buttonStudy, buttonCafe, buttonRelax, buttonRelax2,
+			buttonSatisfaction,
+			buttonDollar, buttonHouses, buttonPeople);
+
+		// Add all buttons to the drawQueue
+<span class="nc bnc" id="L178" title="All 2 branches missed.">		for (Component button : UIButtons) {</span>
+			// All added to layer '1' (generally on top of most other UI elements)
+<span class="nc" id="L180">			Drawer.add(1, button);</span>
+<span class="nc" id="L181">		}</span>
+
+		// Add all buttons to the InputHandler to allow for interaction handling
+<span class="nc" id="L184">		InputHandler.add(UIButtons);</span>
+
+<span class="nc" id="L186">        MenuText satisfactionText = new MenuText(&quot;&quot;, 80, 30, 2f, 2f);</span>
+<span class="nc" id="L187">        satisfactionText.setAnchor(Anchor.TopRight);</span>
+<span class="nc" id="L188">		SatisfactionMeter.satisfactionText = satisfactionText;</span>
+<span class="nc" id="L189">		SatisfactionMeter.updateDisplay();</span>
+
+        //MenuText notifText1 = new MenuText(&quot;Notification 1&quot;, 130, 23, 1.5f, 1.5f);
+		//notifText1.setAnchor(Anchor.TopLeft);
+
+        //MenuText notifText2 = new MenuText (&quot;Notification 2&quot;, 135, 105, 1.5f, 1.5f);
+        //notifText2.setAnchor(Anchor.TopLeft);
+
+<span class="nc" id="L197">		MenuText buildingCounterText = new MenuText(String.valueOf(BuildingCounter.getTotalBuildingCount()), 70, 25, 2f, 2f);</span>
+<span class="nc" id="L198">		buildingCounterText.setAnchor(Anchor.TopCentre);</span>
+<span class="nc" id="L199">		BuildingCounter.totalCountUI = buildingCounterText;</span>
+
+<span class="nc" id="L201">		MenuText timerText = new MenuText(&quot;Time: &quot; + Timer.getTimeRemaining(), 180, 100, 2f, 2f);</span>
+<span class="nc" id="L202">		timerText.setAnchor(Anchor.TopRight);</span>
+<span class="nc" id="L203">		Timer.text = timerText;</span>
+
+<span class="nc" id="L205">        MenuText moneyText = new MenuText(Integer.toString(MoneyHandler.getMoney()),-230,25,2f,2f);</span>
+<span class="nc" id="L206">        moneyText.setAnchor(Anchor.TopCentre);</span>
+<span class="nc" id="L207">        MoneyHandler.text = moneyText;</span>
+
+
+<span class="nc" id="L210">        List&lt;Component&gt; textElements = Arrays.asList(satisfactionText, buildingCounterText, accommodationCount, studyCount, cafeCount, relaxCount, timerText,moneyText);</span>
+
+		// Add all text to the drawQueue
+<span class="nc bnc" id="L213" title="All 2 branches missed.">		for (Component text : textElements) {</span>
+			// All added to layer '2' (on top of almost all other UI elements)
+<span class="nc" id="L215">			Drawer.add(2, text);</span>
+<span class="nc" id="L216">		}</span>
+		// No need to add text to the InputHandler (unless you really want to be able to click on it for some reason)
+<span class="nc" id="L218">	}</span>
+
+
+
+	public static void createEventPopupUI(Event event) {
+<span class="nc" id="L223">        Backdrop eventScreenBackdrop = new Backdrop(&quot;Backdrop.png&quot;, 0, 30, 400, 350);</span>
+<span class="nc" id="L224">        eventScreenBackdrop.setAnchor(Anchor.Centre);</span>
+<span class="nc" id="L225">		eventScreenBackdrop.update();</span>
+<span class="nc" id="L226">		event.eventUI.elements.add(eventScreenBackdrop);</span>
+<span class="nc" id="L227">        Drawer.add(1, eventScreenBackdrop); // Layer 1 so its behind the rest of the UI</span>
+
+<span class="nc" id="L229">        Button buttonAccept = new Button(&quot;Accept.png&quot;, -130, -106, 126, 66);</span>
+<span class="nc" id="L230">        buttonAccept.setClickAction(Actions.ChooseEventOption);</span>
+<span class="nc" id="L231">        buttonAccept.setAnchor(Anchor.Centre);</span>
+<span class="nc" id="L232">		buttonAccept.value = 1; // Used so the Event class knows which button was clicked</span>
+
+<span class="nc" id="L234">        Button buttonNeutral = new Button(&quot;Neutral.png&quot;, 0, -106, 126, 66);</span>
+<span class="nc" id="L235">        buttonNeutral.setClickAction(Actions.ChooseEventOption);</span>
+<span class="nc" id="L236">        buttonNeutral.setAnchor(Anchor.Centre);</span>
+<span class="nc" id="L237">		buttonNeutral.value = 2;</span>
+
+<span class="nc" id="L239">        Button buttonReject = new Button(&quot;Reject.png&quot;, 130, -106, 126, 66);</span>
+<span class="nc" id="L240">        buttonReject.setClickAction(Actions.ChooseEventOption);</span>
+<span class="nc" id="L241">        buttonReject.setAnchor(Anchor.Centre);</span>
+<span class="nc" id="L242">		buttonReject.value = 3;</span>
+
+<span class="nc" id="L244">        List&lt;Component&gt; eventChoices = Arrays.asList(buttonAccept, buttonReject, buttonNeutral);</span>
+
+<span class="nc bnc" id="L246" title="All 2 branches missed.">		for (Component button : eventChoices) {</span>
+			// All added to layer '2' (on top of almost all other UI elements)
+<span class="nc" id="L248">			button.update();</span>
+<span class="nc" id="L249">			event.eventUI.elements.add(button);</span>
+<span class="nc" id="L250">			Drawer.add(2, button);</span>
+<span class="nc" id="L251">		}</span>
+<span class="nc" id="L252">        InputHandler.add(eventChoices);</span>
+<span class="nc" id="L253">		event.eventUI.buttonElements = eventChoices;</span>
+
+        //MenuText eventTextTitle = new MenuText(&quot;Event 1&quot;, 0, 0, 0, 0);
+        //eventTextTitle.setAnchor(Anchor.Centre);
+<span class="nc" id="L257">		MenuText testText = new MenuText(</span>
+			event.eventText,
+<span class="nc" id="L259">			-eventScreenBackdrop.getBaseWidth() / 2 + eventScreenBackdrop.getBaseX() + 15,</span>
+<span class="nc" id="L260">			eventScreenBackdrop.getBaseHeight() / 2 + eventScreenBackdrop.getBaseY() - 12,</span>
+			1.5f, 1.5f);
+<span class="nc" id="L262">		testText.setAnchor(Anchor.Centre);</span>
+<span class="nc" id="L263">		testText.update();</span>
+<span class="nc" id="L264">		event.eventUI.elements.add(testText);</span>
+<span class="nc" id="L265">        Drawer.add(2, testText);</span>
+
+<span class="nc" id="L267">	}</span>
+
+
+	public static void setupMenu(){
+
+
+        //Texture atlas of building menu bar
+<span class="nc" id="L274">        Texture btn1Texture = new Texture(Gdx.files.internal(&quot;Buildings\\Study.png&quot;));</span>
+<span class="nc" id="L275">        Texture btn2Texture = new Texture(Gdx.files.internal(&quot;Buildings\\Study.png&quot;));</span>
+<span class="nc" id="L276">        Texture btn3Texture = new Texture(Gdx.files.internal(&quot;Buildings\\Study.png&quot;));</span>
+<span class="nc" id="L277">        Texture btn4Texture = new Texture(Gdx.files.internal(&quot;Buildings\\Study.png&quot;));</span>
+
+<span class="nc" id="L279">        Texture btn1TextureHover = new Texture(Gdx.files.internal(&quot;Buildings\\StudyTransparent.png&quot;));</span>
+
+
+
+<span class="nc" id="L283">		ImageButton btn1 = new ImageButton(new ImageButton.ImageButtonStyle());</span>
+<span class="nc" id="L284">        btn1.getStyle().imageUp = new TextureRegionDrawable(btn1Texture);</span>
+<span class="nc" id="L285">		btn1.getStyle().imageOver = new TextureRegionDrawable(btn1TextureHover);</span>
+
+<span class="nc" id="L287">        ImageButton btn2 = new ImageButton(new ImageButton.ImageButtonStyle());</span>
+<span class="nc" id="L288">        btn2.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(btn2Texture));</span>
+
+<span class="nc" id="L290">        ImageButton btn3 = new ImageButton(new ImageButton.ImageButtonStyle());</span>
+<span class="nc" id="L291">        btn3.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(btn3Texture));</span>
+
+<span class="nc" id="L293">        ImageButton btn4 = new ImageButton(new ImageButton.ImageButtonStyle());</span>
+<span class="nc" id="L294">        btn4.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(btn4Texture));</span>
+
+
+        // Table for layout
+<span class="nc" id="L298">        Table table = new Table();</span>
+<span class="nc" id="L299">        table.setFillParent(true);</span>
+<span class="nc" id="L300">        table.bottom().center();</span>
+<span class="nc" id="L301">        table.bottom();</span>
+
+        // Add buttons to table
+<span class="nc" id="L304">        table.add(btn1).pad(10);</span>
+<span class="nc" id="L305">        table.add(btn2).pad(10);</span>
+<span class="nc" id="L306">        table.add(btn3).pad(10);</span>
+<span class="nc" id="L307">        table.add(btn4).pad(10);</span>
+
+        // Add table to stage
+
+        // Set up click listeners for buttons
+<span class="nc" id="L312">        btn1.addListener(new ClickListener() {</span>
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+<span class="nc" id="L315">				System.out.println(&quot;pressed btn1&quot;);</span>
+
+<span class="nc" id="L317">			}</span>
+        });
+
+<span class="nc" id="L320">        btn2.addListener(new ClickListener() {</span>
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
+
+<span class="nc" id="L325">            }</span>
+        });
+
+<span class="nc" id="L328">        btn3.addListener(new ClickListener() {</span>
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
+<span class="nc" id="L332">            }</span>
+        });
+
+<span class="nc" id="L335">        btn4.addListener(new ClickListener() {</span>
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
+<span class="nc" id="L339">			}</span>
+        });
+
+<span class="nc" id="L342">        Drawer.stage.addActor(table);</span>
+
+
+<span class="nc" id="L345">	}</span>
+
+
+
+	public static void createEndScreenUI() {
+<span class="nc" id="L350">		Button buttonMainMenu = new Button(&quot;Main Menu.png&quot;, 0, 90, 262, 66);</span>
+<span class="nc" id="L351">		buttonMainMenu.setClickAction(Actions.OpenStartScreen);</span>
+<span class="nc" id="L352">        buttonMainMenu.setAnchor(Anchor.Centre);</span>
+
+<span class="nc" id="L354">        Button buttonNewGame = new Button(&quot;New Game.png&quot;, 0, 20, 262, 66);</span>
+<span class="nc" id="L355">		buttonNewGame.setClickAction(Actions.OpenGameplayScreen);</span>
+<span class="nc" id="L356">        buttonNewGame.setAnchor(Anchor.Centre);</span>
+
+<span class="nc" id="L358">        List&lt;Component&gt; endScreenButtonList = Arrays.asList(</span>
+			buttonMainMenu,
+			buttonNewGame);
+
+		// Add all buttons to the drawQueue
+<span class="nc bnc" id="L363" title="All 2 branches missed.">		for (Component button : endScreenButtonList) {</span>
+			// All added to layer '1' (generally on top of most other UI elements)
+<span class="nc" id="L365">			Drawer.add(1, button);</span>
+<span class="nc" id="L366">		}</span>
+
+		// Add all buttons to the InputHandler to allow for interaction handling
+		// (Allows buttons to be clicked and things to actually happen)
+<span class="nc" id="L370">		InputHandler.add(endScreenButtonList);</span>
+<span class="nc" id="L371">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

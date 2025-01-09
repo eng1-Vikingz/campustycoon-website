@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameplayScreen.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon.UI.Screens</a> &gt; <span class="el_source">GameplayScreen.java</span></div><h1>GameplayScreen.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon.UI.Screens;
+
+import com.vikingz.campustycoon.UI.Components.BankruptMenu;
+import com.vikingz.campustycoon.UI.Components.PauseMenu;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.ScreenUtils;
+
+import com.vikingz.campustycoon.Game.GameLogic.Event;
+import com.vikingz.campustycoon.Game.GameLogic.MoneyHandler;
+import com.vikingz.campustycoon.Game.GameLogic.Timer;
+import com.vikingz.campustycoon.UI.Window;
+import com.vikingz.campustycoon.Util.Drawer;
+import com.vikingz.campustycoon.Util.GameUtils;
+
+import java.util.concurrent.ThreadLocalRandom;
+
+/**
+ * This class is used to create the gameplay screen.
+ */
+<span class="fc" id="L25">public class GameplayScreen implements Screen{</span>
+    private Timer timer;
+    private boolean stateChanged;
+    private float elapsedTime;
+    private ThreadLocalRandom rand;
+    private float eventCounter;
+    private Skin skin;
+    private PauseMenu pauseMenu;
+    private boolean paused;
+    private BankruptMenu bankruptMenu;
+    private boolean bankrupt;
+
+
+    /**
+     * Shows the gameplay screen.
+     */
+    @Override
+    public void show() {
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        if (!com.vikingz.campustycoon.Util.ScreenUtils.GameActive) {</span>
+<span class="nc" id="L44">            timer = new Timer(5); // Sets a countdown for 300 seconds (5 minutes)</span>
+<span class="nc" id="L45">            timer.start();</span>
+<span class="nc" id="L46">            GameUtils.startGame();</span>
+<span class="nc" id="L47">            GameUtils.createGameplayUI();</span>
+<span class="nc" id="L48">            stateChanged = false;  // Reset stateChanged when the screen is shown</span>
+<span class="nc" id="L49">            elapsedTime = 0;</span>
+<span class="nc" id="L50">            rand = ThreadLocalRandom.current();</span>
+<span class="nc" id="L51">            eventCounter = 0f;</span>
+<span class="nc" id="L52">            this.skin = new Skin(Gdx.files.internal(&quot;glassy-ui/skin/glassy-ui.json&quot;));</span>
+<span class="nc" id="L53">            pauseMenu = new PauseMenu(skin);</span>
+<span class="nc" id="L54">            bankruptMenu = new BankruptMenu(skin);</span>
+<span class="nc" id="L55">            paused = false;</span>
+<span class="nc" id="L56">            bankrupt = false;</span>
+<span class="nc" id="L57">            com.vikingz.campustycoon.Util.ScreenUtils.GameActive = true;</span>
+        }
+<span class="nc" id="L59">    }</span>
+
+    /**
+     * Render the gameplay screen.
+     */
+    @Override
+    public void render(float delta) {
+        // Clear screen
+<span class="nc" id="L67">        Gdx.gl.glClearColor(0.1f, 0.1f, 0.4f, 1);</span>
+<span class="nc" id="L68">        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);</span>
+
+<span class="nc" id="L70">        ScreenUtils.clear(Color.BLACK);</span>
+
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {</span>
+<span class="nc" id="L73">            pause();</span>
+        }
+
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (!paused) {</span>
+<span class="nc" id="L77">            timer.update(delta); // Update the timer every frame</span>
+<span class="nc" id="L78">            MoneyHandler.update(delta); // Update the balance of the player</span>
+            // Check if the timer has ended and stateChanged is false
+<span class="nc bnc" id="L80" title="All 4 branches missed.">            if (timer.hasEnded() &amp;&amp; !stateChanged) {</span>
+<span class="nc" id="L81">                stateChanged = true; // Set the flag to true to prevent re-execution</span>
+            }
+
+            //times when next event is
+<span class="nc" id="L85">            eventCounter += rand.nextInt(0, 1000) * delta;</span>
+<span class="nc bnc" id="L86" title="All 4 branches missed.">            if (eventCounter &gt;= 12000 &amp;&amp; GameUtils.currentEvent == null) {</span>
+<span class="nc" id="L87">                eventCounter = 0;</span>
+                //Pop event
+<span class="nc" id="L89">                GameUtils.currentEvent = new Event();</span>
+<span class="nc" id="L90">                System.out.println(&quot;Event opened&quot;);</span>
+            }
+
+
+<span class="nc" id="L94">            elapsedTime += delta; // delta is the time elapsed since the last frame</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">            if (elapsedTime &gt;= 1) { // Increment counter every second</span>
+
+<span class="nc" id="L97">                System.out.println(&quot;second&quot;);</span>
+
+            }
+
+<span class="nc" id="L101">            elapsedTime = 0; // Reset elapsed time</span>
+
+        }
+<span class="nc" id="L104">        Drawer.drawAll();</span>
+<span class="nc" id="L105">    }</span>
+
+    /**
+     * Set the paused state of the game.
+     * @param paused
+     */
+    public void setPaused(boolean paused) {
+<span class="nc" id="L112">        this.paused = paused;</span>
+<span class="nc" id="L113">    }</span>
+
+    /**
+     * Resize the gameplay screen.
+     */
+    @Override
+    public void resize(int width, int height) {
+<span class="nc" id="L120">        Window.updateResolution(width, height);</span>
+<span class="nc" id="L121">        Drawer.updateAll();</span>
+<span class="nc" id="L122">        Drawer.stage.getViewport().update(width, height, true);</span>
+
+<span class="nc" id="L124">    }</span>
+
+    /**
+     * Pause the game.
+     * -&gt; Opens the pause menu
+     */
+    @Override
+    public void pause() {
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        if (!bankrupt) {</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">            if (!paused) {</span>
+<span class="nc" id="L134">                Drawer.stage.addActor(pauseMenu);</span>
+<span class="nc" id="L135">                pauseMenu.toFront();</span>
+<span class="nc" id="L136">                pauseMenu.setPosition((Drawer.stage.getWidth() - pauseMenu.getWidth()) / 2, ((Drawer.stage.getHeight() - pauseMenu.getHeight()) / 2)-50);</span>
+<span class="nc" id="L137">                Gdx.input.setInputProcessor(Drawer.stage);</span>
+<span class="nc" id="L138">                paused = true;</span>
+            } else {
+<span class="nc" id="L140">                com.vikingz.campustycoon.Util.ScreenUtils.resetInputProcessor();</span>
+<span class="nc" id="L141">                pauseMenu.remove();</span>
+<span class="nc" id="L142">                paused = false;</span>
+            }
+        }
+<span class="nc" id="L145">    }</span>
+
+    @Override
+    public void resume() {
+<span class="nc" id="L149">    }</span>
+
+    @Override
+    public void hide() {
+
+<span class="nc" id="L154">    }</span>
+
+    @Override
+    public void dispose() {
+        // Destroy screen's assets here.
+<span class="nc" id="L159">    }</span>
+
+    /**
+     * Display the bankrupt warning.
+     */
+    public void displayBankruptWarning() {
+<span class="nc" id="L165">        this.bankrupt = true;</span>
+<span class="nc" id="L166">        this.paused = true;</span>
+<span class="nc" id="L167">        Drawer.stage.addActor(bankruptMenu);</span>
+<span class="nc" id="L168">        bankruptMenu.setPosition((Drawer.stage.getWidth() - pauseMenu.getWidth()) / 2, ((Drawer.stage.getHeight() - pauseMenu.getHeight()) / 2)-50);</span>
+<span class="nc" id="L169">        Gdx.input.setInputProcessor(Drawer.stage);</span>
+<span class="nc" id="L170">    }</span>
+
+    public void setBankrupt(boolean bankrupt) {
+<span class="nc" id="L173">        this.bankrupt = bankrupt;</span>
+<span class="nc" id="L174">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

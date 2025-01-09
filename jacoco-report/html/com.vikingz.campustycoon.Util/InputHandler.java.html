@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InputHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">headless</a> &gt; <a href="index.source.html" class="el_package">com.vikingz.campustycoon.Util</a> &gt; <span class="el_source">InputHandler.java</span></div><h1>InputHandler.java</h1><pre class="source lang-java linenums">package com.vikingz.campustycoon.Util;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.badlogic.gdx.InputProcessor;
+
+import com.vikingz.campustycoon.UI.Camera;
+import com.vikingz.campustycoon.UI.Window;
+import com.vikingz.campustycoon.UI.Components.Component;
+
+<span class="fc" id="L12">public class InputHandler implements InputProcessor {</span>
+	private static final int LeftClick = 0;
+	@SuppressWarnings(&quot;unused&quot;)
+	private static final int RightClick = 1;
+	@SuppressWarnings(&quot;unused&quot;)
+	private static final int MiddleClick = 2;
+	
+<span class="fc" id="L19">	public static List&lt;Component&gt; clickables = new ArrayList&lt;Component&gt;();</span>
+	@SuppressWarnings(&quot;unused&quot;)
+<span class="fc" id="L21">	private static boolean leftClickDown = false;</span>
+	
+	
+	// Removes a component from clickables, so that it stops being processed
+	// Does a linear search through the list to find the component
+	public static void remove(Component component) {
+<span class="pc bpc" id="L27" title="1 of 2 branches missed.">		for (int index = 0; index &lt; clickables.size(); index++) {</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">			if (component.equals(clickables.get(index))) {</span>
+<span class="fc" id="L29">				clickables.remove(index);</span>
+<span class="fc" id="L30">				return;</span>
+			}
+		}
+<span class="nc" id="L33">	}</span>
+	
+	
+	public static void clear() {
+<span class="fc" id="L37">		clickables = new ArrayList&lt;Component&gt;();</span>
+<span class="fc" id="L38">	}</span>
+	
+	public static void add(Component button) {
+<span class="fc" id="L41">		clickables.add(button);</span>
+<span class="fc" id="L42">	}</span>
+	
+	public static void add(List&lt;Component&gt; buttons) {
+<span class="fc" id="L45">		clickables.addAll(buttons);</span>
+<span class="fc" id="L46">	}</span>
+	
+	public boolean keyDown(int keycode) {
+<span class="nc" id="L49">		return false;</span>
+	}
+
+	public boolean keyUp(int keycode) {
+<span class="nc" id="L53">		return false;</span>
+	}
+
+	public boolean keyTyped(char character) {
+<span class="nc" id="L57">		return false;</span>
+	}
+
+	// Called on click
+	public boolean touchDown(int x, int y, int pointer, int button) {
+<span class="nc bnc" id="L62" title="All 2 branches missed.">		if (button == LeftClick) {</span>
+<span class="nc" id="L63">			leftClickDown = true;</span>
+		}
+		
+<span class="nc bnc" id="L66" title="All 2 branches missed.">		for (Component btn : clickables){</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">			if (isTouchWithinButton(transformX(x), transformY(y), btn)) {</span>
+<span class="nc" id="L68">				btn.onClick();</span>
+<span class="nc" id="L69">				Camera.update();</span>
+<span class="nc" id="L70">				return true;</span>
+			}
+<span class="nc" id="L72">		}</span>
+		
+<span class="nc" id="L74">		Camera.click(x, y, button);</span>
+<span class="nc" id="L75">		return true;</span>
+	}
+
+	private int transformX(int x) {
+<span class="nc" id="L79">		return (int)(x * Component.widthRatio);</span>
+	}
+	private int transformY(int y) {
+<span class="nc" id="L82">		return Window.defaultHeight - (int)(y * Component.heightRatio);</span>
+	}
+
+	public boolean isTouchWithinButton(int x, int y, Component button) {
+<span class="nc bnc" id="L86" title="All 2 branches missed.">		if (button == null) {</span>
+<span class="nc" id="L87">			return false; // Button is null, so return false to avoid a NullPointerException</span>
+		}
+        // Assuming button's (x, y) represents the bottom-left corner and has width and height
+<span class="nc bnc" id="L90" title="All 4 branches missed.">        return x &gt;= button.getX() &amp;&amp; x &lt;= button.getX() + button.getWidth()</span>
+<span class="nc bnc" id="L91" title="All 4 branches missed.">                &amp;&amp; y &gt;= button.getY() &amp;&amp; y &lt;= button.getY() + button.getHeight();</span>
+    }
+
+	public boolean touchUp(int x, int y, int pointer, int button) {
+<span class="nc bnc" id="L95" title="All 2 branches missed.">		if (button == LeftClick) {</span>
+<span class="nc" id="L96">			leftClickDown = false;</span>
+<span class="nc" id="L97">			Camera.lift(x, y, button);</span>
+		}
+<span class="nc" id="L99">		return true;</span>
+	}
+
+	public boolean touchDragged(int x, int y, int pointer) {
+<span class="nc" id="L103">		Camera.drag(x, y);</span>
+<span class="nc" id="L104">		return true;</span>
+	}
+
+	public boolean mouseMoved(int x, int y) {
+<span class="nc" id="L108">		Camera.checkMouseOverTile(x ,y);</span>
+<span class="nc" id="L109">		Camera.drawCursor();</span>
+<span class="nc" id="L110">		return true;</span>
+	}
+
+	public boolean scrolled(float amountX, float amountY) {
+<span class="nc" id="L114">		Camera.scroll(amountY);</span>
+<span class="nc" id="L115">		return true;</span>
+	}
+
+	public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+<span class="nc" id="L119">		return false;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
